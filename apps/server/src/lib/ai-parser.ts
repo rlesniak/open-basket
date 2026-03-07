@@ -10,24 +10,32 @@ const ParseResultSchema = z.object({
   unit: z.string().nullable(),
   note: z.string().nullable(),
   category: z.enum(CATEGORIES),
+  store: z.string().nullable(), // NEW: extracted store name/keyword
 });
 
 export type ParseResult = z.infer<typeof ParseResultSchema>;
 
 export async function parseProductInput(input: string): Promise<ParseResult> {
-  const systemPrompt = `Jesteś asystentem do parsowania produktów spożywczych z języka naturalnego.
+  const systemPrompt = `Jesteś asystentem do parsowania produktów spożywczych.
 
-Twoim zadaniem jest przekształcenie tekstu użytkownika na strukturę JSON z polami:
-- name: nazwa produktu (wymagane)
-- qty: ilość (liczba całkowita lub null jeśli nie podano)
+Przekształć tekst na JSON z polami:
+- name: nazwa produktu
+- qty: ilość (liczba całkowita lub null)
 - unit: jednostka miary (szt, kg, g, l, ml, opak) lub null
-- note: dodatkowe informacje (marka, procent, wymagania) lub null
+- note: dodatkowe informacje lub null
 - category: jedna z kategorii: ${CATEGORIES.join(',')}
+- store: nazwa sklepu jeśli wymieniona (np. "z DELI", "z Lidla"), inaczej null
+
+Rozpoznawaj słowa kluczowe sklepów:
+- "z DELI", "z deli" → store: "deli"
+- "z Lidla", "z Lidl" → store: "lidl"
+- "z Biedronki" → store: "biedronka"
+- "z piekarni" → store: "piekarnia"
 
 Przykłady:
-Input: "mleko 10 sztuk, 3.2%" → {"name": "mleko", "qty": 10, "unit": "szt", "note": "3.2%", "category": "Nabiał"}
-Input: "ziemniaki 3kg" → {"name": "ziemniaki", "qty": 3, "unit": "kg", "note": null, "category": "Warzywa"}
-Input: "Woda mineralna 2 koniecznie z cisowianka" → {"name": "woda mineralna", "qty": 2, "unit": null, "note": "koniecznie z cisowianka", "category": "Napoje"}
+"mleko 10 sztuk, 3.2%" → {"name": "mleko", "qty": 10, "unit": "szt", "note": "3.2%", "category": "Nabiał", "store": null}
+"kawa z DELI" → {"name": "kawa", "qty": null, "unit": null, "note": null, "category": "Napoje", "store": "deli"}
+"chleb z piekarni" → {"name": "chleb", "qty": null, "unit": null, "note": null, "category": "Pieczywo", "store": "piekarnia"}
 
 Zwróć TYLKO obiekt JSON.`;
 
@@ -50,6 +58,32 @@ Zwróć TYLKO obiekt JSON.`;
       unit: null,
       note: null,
       category: 'Inne' as any,
+      store: null,
     };
   }
+}
+
+// Match parsed store keyword against available stores
+export async function matchStoreFromKeywords(
+  parsedStore: string | null,
+  availableStores: Array<{ id: string; name: string; keywords: string | null }>
+): Promise<string | null> {
+  if (!parsedStore) return null;
+
+  const normalizedInput = parsedStore.toLowerCase().trim();
+
+  for (const store of availableStores) {
+    if (store.keywords) {
+      const keywords = store.keywords.toLowerCase().split(',').map(k => k.trim());
+      if (keywords.some(kw => normalizedInput.includes(kw))) {
+        return store.id;
+      }
+    }
+    // Also check store name
+    if (normalizedInput.includes(store.name.toLowerCase())) {
+      return store.id;
+    }
+  }
+
+  return null;
 }
