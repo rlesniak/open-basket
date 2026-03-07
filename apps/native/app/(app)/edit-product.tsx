@@ -3,8 +3,8 @@ import { View, ScrollView, ActivityIndicator, Text, TextInput, Pressable } from 
 import { router, useLocalSearchParams } from 'expo-router';
 import { Stack } from 'expo-router/stack';
 import { Button, Card, Spinner } from 'heroui-native';
-import { useCategories, useProducts, useUpdateProduct } from '@/hooks/shopping/useShopping';
-import { Category } from '@/types/shopping';
+import { useCategories, useProducts, useStores, useUpdateProduct } from '@/hooks/shopping/useShopping';
+import { Category, Store } from '@/types/shopping';
 
 const UNITS = ['szt', 'kg', 'l', 'opak'] as const;
 
@@ -23,6 +23,7 @@ export default function EditProductModal() {
   const { id } = useLocalSearchParams<{ id: string }>();
   const { data: products = [] } = useProducts();
   const { data: categories = [] } = useCategories();
+  const { data: stores = [] } = useStores();
   const updateProductMutation = useUpdateProduct();
 
   const product = products.find((p) => p.id === id);
@@ -32,8 +33,10 @@ export default function EditProductModal() {
   const [unit, setUnit] = useState<string>('');
   const [note, setNote] = useState('');
   const [selectedCategoryId, setSelectedCategoryId] = useState<string>('');
+  const [assignedStoreId, setAssignedStoreId] = useState<string | null>(null);
   const [showCategoryPicker, setShowCategoryPicker] = useState(false);
   const [showUnitPicker, setShowUnitPicker] = useState(false);
+  const [showStorePicker, setShowStorePicker] = useState(false);
 
   useEffect(() => {
     if (product) {
@@ -42,6 +45,7 @@ export default function EditProductModal() {
       setUnit(product.unit ?? '');
       setNote(product.note ?? '');
       setSelectedCategoryId(product.categoryId);
+      setAssignedStoreId(product.assignedStoreId);
     }
   }, [product]);
 
@@ -63,6 +67,7 @@ export default function EditProductModal() {
       unit: unit.trim() || null,
       note: note.trim() || null,
       categoryId: selectedCategoryId,
+      assignedStoreId: assignedStoreId || null,
     });
 
     router.back();
@@ -73,6 +78,7 @@ export default function EditProductModal() {
   };
 
   const selectedCategory = categories.find((c: Category) => c.id === selectedCategoryId);
+  const assignedStore = stores.find((s: Store) => s.id === assignedStoreId);
   const isLoading = updateProductMutation.isPending;
   const isValid = name.trim() && selectedCategoryId;
 
@@ -174,6 +180,64 @@ export default function EditProductModal() {
                     </Pressable>
                   ))}
                 </View>
+              </View>
+            )}
+          </View>
+
+          {/* Store Assignment */}
+          <View className="mb-5">
+            <Text className="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-2">
+              Przypisanie do sklepu
+            </Text>
+            <Pressable
+              onPress={() => {
+                setShowStorePicker(!showStorePicker);
+                setShowCategoryPicker(false);
+                setShowUnitPicker(false);
+              }}
+              className="flex-row items-center justify-between py-2 border-b border-gray-200"
+            >
+              <Text className={`text-base ${assignedStoreId ? 'text-gray-900' : 'text-gray-400'}`}>
+                {assignedStore ? assignedStore.name : 'Wszystkie sklepy (globalny)'}
+              </Text>
+              <Text className="text-gray-400 text-lg">{showStorePicker ? '▲' : '▼'}</Text>
+            </Pressable>
+
+            {showStorePicker && (
+              <View className="mt-2 bg-gray-50 rounded-xl p-2">
+                <Pressable
+                  onPress={() => {
+                    setAssignedStoreId(null);
+                    setShowStorePicker(false);
+                  }}
+                  className={`py-3 px-4 rounded-lg mb-1 ${
+                    !assignedStoreId ? 'bg-blue-500' : 'bg-white'
+                  }`}
+                >
+                  <Text className={`font-medium ${!assignedStoreId ? 'text-white' : 'text-gray-700'}`}>
+                    Wszystkie sklepy
+                  </Text>
+                </Pressable>
+                {stores.map((store: Store) => (
+                  <Pressable
+                    key={store.id}
+                    onPress={() => {
+                      setAssignedStoreId(store.id);
+                      setShowStorePicker(false);
+                    }}
+                    className={`py-3 px-4 rounded-lg mb-1 ${
+                      assignedStoreId === store.id ? 'bg-blue-500' : 'bg-white'
+                    }`}
+                  >
+                    <Text
+                      className={`font-medium ${
+                        assignedStoreId === store.id ? 'text-white' : 'text-gray-700'
+                      }`}
+                    >
+                      {store.name}
+                    </Text>
+                  </Pressable>
+                ))}
               </View>
             )}
           </View>
