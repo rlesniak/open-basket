@@ -19,6 +19,7 @@ interface ProductListProps {
   categories: Category[];
   storeCategoryOrders: StoreCategoryOrder[];
   onToggleProduct: (productId: string, isPurchased: boolean) => void;
+  onEditProduct?: (productId: string) => void;
   togglePending: boolean;
   pendingProductId?: string;
 }
@@ -28,6 +29,7 @@ export const ProductList = ({
   categories,
   storeCategoryOrders,
   onToggleProduct,
+  onEditProduct,
   togglePending,
   pendingProductId,
 }: ProductListProps) => {
@@ -94,6 +96,7 @@ export const ProductList = ({
                   key={product.id}
                   product={product}
                   onToggle={() => onToggleProduct(product.id, true)}
+                  onEdit={onEditProduct ? () => onEditProduct(product.id) : undefined}
                   isPending={togglePending && pendingProductId === product.id}
                   isLast={index === categoryProducts.length - 1}
                 />

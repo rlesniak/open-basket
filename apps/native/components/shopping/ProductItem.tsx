@@ -4,6 +4,7 @@ import { Product } from '@/types/shopping';
 interface ProductItemProps {
   product: Product;
   onToggle: () => void;
+  onEdit?: () => void;
   isPending: boolean;
   isLast: boolean;
   isPurchased?: boolean;
@@ -12,6 +13,7 @@ interface ProductItemProps {
 export const ProductItem = ({ 
   product, 
   onToggle, 
+  onEdit,
   isPending, 
   isLast,
   isPurchased = false 
@@ -77,6 +79,17 @@ export const ProductItem = ({
             </View>
           )}
         </View>
+
+        {/* Edit Button - only for pending items */}
+        {!isPurchased && onEdit && (
+          <Pressable
+            onPress={onEdit}
+            className="p-2 ml-2"
+            hitSlop={8}
+          >
+            <Text className="text-blue-500 text-lg">✏️</Text>
+          </Pressable>
+        )}
       </View>
     </Pressable>
   );

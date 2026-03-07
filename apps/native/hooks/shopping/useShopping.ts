@@ -72,6 +72,22 @@ export const useClearPurchased = () => {
   });
 };
 
+export const useUpdateProduct = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: (data: { productId: string; name: string; qty: number | null; unit: string | null; note: string | null; categoryId: string }) =>
+      client.shopping.updateProduct(data),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['shopping', 'getProducts'] });
+      Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
+    },
+    onError: () => {
+      Haptics.notificationAsync(Haptics.NotificationFeedbackType.Error);
+    },
+  });
+};
+
 export const useUpdateCategoryOrder = () => {
   const queryClient = useQueryClient();
 

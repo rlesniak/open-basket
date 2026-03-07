@@ -139,6 +139,41 @@ const clearPurchased = o
       .where(eq(products.isPurchased, true));
   });
 
+const updateProduct = o
+  .input(z.object({
+    productId: z.string(),
+    name: z.string(),
+    qty: z.number().nullable(),
+    unit: z.string().nullable(),
+    note: z.string().nullable(),
+    categoryId: z.string(),
+  }))
+  .output(ProductSchema)
+  .handler(async ({ input }) => {
+    await db
+      .update(products)
+      .set({
+        name: input.name,
+        qty: input.qty,
+        unit: input.unit,
+        note: input.note,
+        categoryId: input.categoryId,
+      })
+      .where(eq(products.id, input.productId));
+
+    const updatedProduct = await db
+      .select()
+      .from(products)
+      .where(eq(products.id, input.productId))
+      .then(rows => rows[0]);
+
+    if (!updatedProduct) {
+      throw new Error('Product not found');
+    }
+
+    return updatedProduct;
+  });
+
 export const shoppingRouter = {
   // Stores
   getStores,
@@ -149,6 +184,7 @@ export const shoppingRouter = {
   // Products
   getProducts,
   addProduct,
+  updateProduct,
   toggleProduct,
   deleteProduct,
   clearPurchased,

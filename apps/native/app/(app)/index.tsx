@@ -72,6 +72,13 @@ export default function ShoppingListScreen() {
     clearPurchasedMutation.mutate();
   };
 
+  const handleEditProduct = (productId: string) => {
+    router.push({
+      pathname: '/edit-product',
+      params: { id: productId },
+    });
+  };
+
   const pendingProducts = products.filter((p) => !p.isPurchased);
   const purchasedProducts = products.filter((p) => p.isPurchased);
 
@@ -115,6 +122,7 @@ export default function ShoppingListScreen() {
               categories={categories}
               storeCategoryOrders={storeCategoryOrders}
               onToggleProduct={handleToggleProduct}
+              onEditProduct={handleEditProduct}
               togglePending={toggleProductMutation.isPending}
               pendingProductId={toggleProductMutation.variables?.productId}
             />

@@ -16,6 +16,13 @@ export default function AppLayout() {
         name="settings/store/[id]"
         options={{ title: "Kolejność kategorii" }}
       />
+      <Stack.Screen
+        name="edit-product"
+        options={{
+          presentation: "modal",
+          gestureEnabled: true,
+        }}
+      />
     </Stack>
   );
 }
