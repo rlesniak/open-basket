@@ -1,4 +1,4 @@
-import { sqliteTable, text, integer } from 'drizzle-orm/sqlite-core';
+import { sqliteTable, text, integer, primaryKey } from 'drizzle-orm/sqlite-core';
 
 export const stores = sqliteTable('stores', {
   id: text('id').primaryKey(),
@@ -15,7 +15,9 @@ export const storeCategoryOrders = sqliteTable('store_category_orders', {
   storeId: text('store_id').notNull(),
   categoryId: text('category_id').notNull(),
   orderIndex: integer('order_index').notNull(),
-});
+}, (table) => ({
+  pk: primaryKey({ columns: [table.storeId, table.categoryId] }),
+}));
 
 export const products = sqliteTable('products', {
   id: text('id').primaryKey(),
@@ -45,4 +47,5 @@ export const DEFAULT_CATEGORIES = [
   { id: 'napoje', name: 'Napoje' },
   { id: 'chemia', name: 'Chemia' },
   { id: 'slodycze', name: 'Słodycze' },
+  { id: 'inne', name: 'Inne'}
 ];

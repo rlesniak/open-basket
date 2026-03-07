@@ -1,5 +1,6 @@
 import { View, Text } from 'react-native';
 import { Card } from 'heroui-native';
+import { useMemo } from 'react';
 import { Product, Category, StoreCategoryOrder } from '@/types/shopping';
 import { ProductItem } from '@/components/shopping/ProductItem';
 
@@ -20,36 +21,40 @@ export const ProductList = ({
   togglePending,
   pendingProductId,
 }: ProductListProps) => {
-  const getCategoryName = (categoryId: string): string => {
-    const category = categories.find((c) => c.id === categoryId);
-    return category?.name || 'Inne';
-  };
+  const categoryMap = useMemo(() => {
+    const map: Record<string, string> = {};
+    categories.forEach((c) => {
+      map[c.id] = c.name;
+    });
+    return map;
+  }, [categories]);
 
-  const getCategoryOrder = (categoryId: string): number => {
-    const order = storeCategoryOrders.find((o) => o.categoryId === categoryId);
-    return order?.orderIndex || 999;
-  };
+  const orderMap = useMemo(() => {
+    const map: Record<string, number> = {};
+    storeCategoryOrders.forEach((o) => {
+      map[o.categoryId] = o.orderIndex;
+    });
+    return map;
+  }, [storeCategoryOrders]);
 
-  const groupProductsByCategory = (products: Product[]) => {
+  const groupedProducts = useMemo(() => {
     const grouped: Record<string, Product[]> = {};
-    
     products.forEach((product) => {
       if (!grouped[product.categoryId]) {
         grouped[product.categoryId] = [];
       }
       grouped[product.categoryId].push(product);
     });
-
     return grouped;
-  };
+  }, [products]);
 
-  const groupedProducts = groupProductsByCategory(products);
-  
-  const sortedCategoryIds = Object.keys(groupedProducts).sort((a, b) => {
-    const orderA = getCategoryOrder(a);
-    const orderB = getCategoryOrder(b);
-    return orderA - orderB;
-  });
+  const sortedCategoryIds = useMemo(() => {
+    return Object.keys(groupedProducts).sort((a, b) => {
+      const orderA = orderMap[a] ?? 999;
+      const orderB = orderMap[b] ?? 999;
+      return orderA - orderB;
+    });
+  }, [groupedProducts, orderMap]);
 
   if (sortedCategoryIds.length === 0) {
     return null;
@@ -59,7 +64,7 @@ export const ProductList = ({
     <>
       {sortedCategoryIds.map((categoryId) => {
         const categoryProducts = groupedProducts[categoryId];
-        const categoryName = getCategoryName(categoryId);
+        const categoryName = categoryMap[categoryId] || 'Inne';
 
         return (
           <View key={categoryId} className="mb-4">

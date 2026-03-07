@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
-import { View, ScrollView, Text } from 'react-native';
-import { Stack } from 'expo-router';
+import { View, ScrollView, Text, Pressable, Platform } from 'react-native';
+import { Stack, useRouter } from 'expo-router';
+import { StatusBar } from 'expo-status-bar';
 import * as Haptics from 'expo-haptics';
 import { ProductInput } from '@/components/shopping/ProductInput';
 import { StoreSelector } from '@/components/shopping/StoreSelector';
@@ -11,12 +12,13 @@ import { useProductParser } from '@/hooks/shopping/useProductParser';
 import { Category } from '@/types/shopping';
 
 export default function ShoppingListScreen() {
+  const router = useRouter();
   const [productInput, setProductInput] = useState('');
   const [selectedStoreId, setSelectedStoreId] = useState<string>('');
 
   const { data: stores = [], isLoading: storesLoading } = useStores();
   const { data: categories = [] } = useCategories();
-  const { data: products = [], isLoading: productsLoading } = useProducts();
+  const { data: products = [] } = useProducts();
   const { data: storeCategoryOrders = [] } = useStoreCategoryOrders(selectedStoreId);
   
   const addProductMutation = useAddProduct();
@@ -74,8 +76,18 @@ export default function ShoppingListScreen() {
   const purchasedProducts = products.filter((p) => p.isPurchased);
 
   return (
-    <View className="flex-1 bg-gray-50">
-      <Stack.Screen options={{ title: 'Lista zakupów' }} />
+    <View className="flex-1 bg-gray-50" style={{ paddingTop: Platform.OS === 'android' ? 25 : 0 }}>
+      <StatusBar style="dark" />
+      <Stack.Screen 
+        options={{ 
+          title: 'Lista zakupów',
+          headerRight: () => (
+            <Pressable onPress={() => router.push('/settings')} className="mr-4">
+              <Text className="text-blue-500 font-medium">Ustawienia</Text>
+            </Pressable>
+          )
+        }} 
+      />
 
       <ProductInput
         value={productInput}
@@ -92,9 +104,7 @@ export default function ShoppingListScreen() {
       />
 
       <ScrollView className="flex-1 px-4">
-        {productsLoading ? (
-          <Text className="text-center text-gray-500 mt-8">Ładowanie produktów...</Text>
-        ) : pendingProducts.length === 0 && purchasedProducts.length === 0 ? (
+        {pendingProducts.length === 0 && purchasedProducts.length === 0 ? (
           <Text className="text-center text-gray-500 mt-8">
             Brak produktów na liście. Dodaj coś!
           </Text>

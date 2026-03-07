@@ -5,9 +5,9 @@ export default function AppLayout() {
     <Stack
       screenOptions={{
         headerLargeTitle: true,
-        headerTransparent: true,
         headerShadowVisible: false,
         headerBackButtonDisplayMode: "minimal",
+        contentStyle: { backgroundColor: "#F9FAFB" },
       }}
     >
       <Stack.Screen name="index" options={{ title: "Lista zakupów" }} />

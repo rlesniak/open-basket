@@ -2,7 +2,7 @@ import { generateText } from 'ai';
 import { openrouter, OPENROUTER_MODELS } from './openrouter';
 import { z } from 'zod';
 
-const CATEGORIES = ['Owoce', 'Warzywa', 'Nabiał', 'Mięso', 'Pieczywo', 'Napoje', 'Chemia', 'Słodycze'] as const;
+const CATEGORIES = ['Owoce', 'Warzywa', 'Nabiał', 'Mięso', 'Pieczywo', 'Napoje', 'Chemia', 'Słodycze', 'Inne'] as const;
 
 const ParseResultSchema = z.object({
   name: z.string(),
@@ -22,7 +22,7 @@ Twoim zadaniem jest przekształcenie tekstu użytkownika na strukturę JSON z po
 - qty: ilość (liczba całkowita lub null jeśli nie podano)
 - unit: jednostka miary (szt, kg, g, l, ml, opak) lub null
 - note: dodatkowe informacje (marka, procent, wymagania) lub null
-- category: jedna z kategorii: Owoce, Warzywa, Nabiał, Mięso, Pieczywo, Napoje, Chemia, Słodycze
+- category: jedna z kategorii: ${CATEGORIES.join(',')}
 
 Przykłady:
 Input: "mleko 10 sztuk, 3.2%" → {"name": "mleko", "qty": 10, "unit": "szt", "note": "3.2%", "category": "Nabiał"}
