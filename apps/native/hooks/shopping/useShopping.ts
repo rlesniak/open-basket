@@ -1,3 +1,4 @@
+import { useMemo } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import * as Haptics from 'expo-haptics';
 import { client } from '@/utils/orpc';
@@ -6,6 +7,22 @@ export const useStores = () => {
   return useQuery({
     queryKey: ['shopping', 'getStores'],
     queryFn: () => client.shopping.getStores(),
+  });
+};
+
+export const useCreateExceptionStore = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: (data: { name: string; keywords: string }) =>
+      client.shopping.createExceptionStore(data),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['shopping', 'getStores'] });
+      Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
+    },
+    onError: () => {
+      Haptics.notificationAsync(Haptics.NotificationFeedbackType.Error);
+    },
   });
 };
 
@@ -33,9 +50,16 @@ export const useStoreCategoryOrders = (storeId: string) => {
 
 export const useAddProduct = () => {
   const queryClient = useQueryClient();
-  
+
   return useMutation({
-    mutationFn: (data: { name: string; qty: number | null; unit: string | null; note: string | null; categoryId: string }) => 
+    mutationFn: (data: {
+      name: string;
+      qty: number | null;
+      unit: string | null;
+      note: string | null;
+      categoryId: string;
+      assignedStoreId: string | null; // NEW
+    }) =>
       client.shopping.addProduct(data),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['shopping', 'getProducts'] });
@@ -76,7 +100,7 @@ export const useUpdateProduct = () => {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: (data: { productId: string; name: string; qty: number | null; unit: string | null; note: string | null; categoryId: string }) =>
+    mutationFn: (data: { productId: string; name: string; qty: number | null; unit: string | null; note: string | null; categoryId: string; assignedStoreId: string | null }) =>
       client.shopping.updateProduct(data),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['shopping', 'getProducts'] });
@@ -98,4 +122,19 @@ export const useUpdateCategoryOrder = () => {
       queryClient.invalidateQueries({ queryKey: ['shopping', 'getStoreCategoryOrders'] });
     },
   });
+};
+
+export const useFilteredProducts = (selectedStoreId: string) => {
+  const { data: products = [], ...rest } = useProducts();
+
+  const filteredProducts = useMemo(() => {
+    return products.filter((product) => {
+      // If product has no assigned store, it's global - show everywhere
+      if (!product.assignedStoreId) return true;
+      // If product has assigned store, only show in that store
+      return product.assignedStoreId === selectedStoreId;
+    });
+  }, [products, selectedStoreId]);
+
+  return { data: filteredProducts, ...rest };
 };
