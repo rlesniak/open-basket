@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { View, ScrollView, Pressable, Text } from 'react-native';
 import { useLocalSearchParams, Stack } from 'expo-router';
 import { useQueryClient } from '@tanstack/react-query';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { Card } from 'heroui-native';
 import * as Haptics from 'expo-haptics';
 import {
@@ -12,6 +13,7 @@ import {
 
 export default function StoreOrderScreen() {
   const { id } = useLocalSearchParams<{ id: string }>();
+  const insets = useSafeAreaInsets();
   const queryClient = useQueryClient();
 
   const [categories, setCategories] = useState<Array<{ id: string; name: string }>>([]);
@@ -59,9 +61,9 @@ export default function StoreOrderScreen() {
   };
 
   return (
-    <>
+    <View className="flex-1" style={{ paddingTop: insets.top, paddingBottom: insets.bottom }}>
       <Stack.Screen options={{ title: 'Kolejność kategorii' }} />
-      <ScrollView className="flex-1 p-4">
+      <ScrollView className="flex-1 p-4" contentContainerStyle={{ paddingBottom: 20 }}>
         <Text className="text-xs text-gray-500 mb-4">
           Użyj strzałek, aby zmienić kolejność kategorii zgodnie z układem sklepu
         </Text>
@@ -94,6 +96,6 @@ export default function StoreOrderScreen() {
           </Card>
         ))}
       </ScrollView>
-    </>
+    </View>
   );
 }

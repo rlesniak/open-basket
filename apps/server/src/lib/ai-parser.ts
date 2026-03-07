@@ -10,40 +10,62 @@ const ParseResultSchema = z.object({
   unit: z.string().nullable(),
   note: z.string().nullable(),
   category: z.enum(CATEGORIES),
-  store: z.string().nullable(), // NEW: extracted store name/keyword
+  storeId: z.string().nullable(), // ID of matched store
 });
 
 export type ParseResult = z.infer<typeof ParseResultSchema>;
 
-export async function parseProductInput(input: string): Promise<ParseResult> {
-  const systemPrompt = `Jesteś asystentem do parsowania produktów spożywczych.
+export type StoreInfo = {
+  id: string;
+  name: string;
+  keywords: string | null;
+};
+
+function buildSystemPrompt(stores: StoreInfo[]): string {
+  const storeList = stores
+    .filter(s => s.keywords) // Only exception stores have keywords
+    .map(s => {
+      const keywords = s.keywords?.split(',').map(k => k.trim()).join('", "') || s.name;
+      return `- ID: "${s.id}" | słowa kluczowe: "${keywords}"`;
+    })
+    .join('\n');
+
+  return `Jesteś asystentem do parsowania produktów spożywczych.
+
+DOSTĘPNE SKLEPY (używaj dokładnie podanych ID):
+${storeList || '(brak sklepów wyjątkowych)'}
 
 Przekształć tekst na JSON z polami:
-- name: nazwa produktu
+- name: nazwa produktu (normalized, capitalized)
 - qty: ilość (liczba całkowita lub null)
 - unit: jednostka miary (szt, kg, g, l, ml, opak) lub null
 - note: dodatkowe informacje lub null
 - category: jedna z kategorii: ${CATEGORIES.join(',')}
-- store: nazwa sklepu jeśli wymieniona (np. "z DELI", "z Lidla"), inaczej null
+- storeId: ID sklepu z listy wyżej lub null jeśli brak dopasowania
 
-Rozpoznawaj słowa kluczowe sklepów:
-- "z DELI", "z deli" → store: "deli"
-- "z Lidla", "z Lidl" → store: "lidl"
-- "z Biedronki" → store: "biedronka"
-- "z piekarni" → store: "piekarnia"
+Zasady:
+- Użytkownik może wpisać "z DELI", "deli", "z deli" - wtedy storeId to "deli" (dokładnie takie ID jak w liście)
+- Jeśli nie ma dopasowania do sklepu z listy, storeId = null
+- Zawsze używaj dokładnego ID z listy, nie twórz nowych
 
 Przykłady:
-"mleko 10 sztuk, 3.2%" → {"name": "mleko", "qty": 10, "unit": "szt", "note": "3.2%", "category": "Nabiał", "store": null}
-"kawa z DELI" → {"name": "kawa", "qty": null, "unit": null, "note": null, "category": "Napoje", "store": "deli"}
-"chleb z piekarni" → {"name": "chleb", "qty": null, "unit": null, "note": null, "category": "Pieczywo", "store": "piekarnia"}
+"mleko 10 sztuk, 3.2%" → {"name": "mleko", "qty": 10, "unit": "szt", "note": "3.2%", "category": "Nabiał", "storeId": null}
+"kawa z DELI" → {"name": "kawa", "qty": null, "unit": null, "note": null, "category": "Napoje", "storeId": "deli"}
 
 Zwróć TYLKO obiekt JSON.`;
+}
 
+export async function parseProductInput(
+  input: string,
+  availableStores: StoreInfo[]
+): Promise<ParseResult> {
+  const systemPrompt = buildSystemPrompt(availableStores);
+  console.log(systemPrompt)
   const { text } = await generateText({
     model: openrouter(OPENROUTER_MODELS.GPT4O_MINI),
     system: systemPrompt,
     prompt: `Input: "${input}"\nOutput:`,
-    maxOutputTokens: 150,
+    maxOutputTokens: 200,
     temperature: 0.1,
   });
 
@@ -58,7 +80,7 @@ Zwróć TYLKO obiekt JSON.`;
       unit: null,
       note: null,
       category: 'Inne' as any,
-      store: null,
+      storeId: null,
     };
   }
 }

@@ -1,14 +1,18 @@
 import { useState } from 'react';
-import { View, ScrollView, Text, TextInput, Pressable } from 'react-native';
+import { View, Text, TextInput, Pressable, Alert } from 'react-native';
+import { KeyboardAwareScrollView } from 'react-native-keyboard-controller';
 import { router } from 'expo-router';
 import { Stack } from 'expo-router/stack';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { Button, Card } from 'heroui-native';
-import { useStores, useCreateExceptionStore } from '@/hooks/shopping/useShopping';
+import { useStores, useCreateExceptionStore, useDeleteExceptionStore } from '@/hooks/shopping/useShopping';
 import { Store } from '@/types/shopping';
 
 export default function ManageStoresScreen() {
+  const insets = useSafeAreaInsets();
   const { data: stores = [] } = useStores();
   const createStoreMutation = useCreateExceptionStore();
+  const deleteStoreMutation = useDeleteExceptionStore();
 
   const [newStoreName, setNewStoreName] = useState('');
   const [newStoreKeywords, setNewStoreKeywords] = useState('');
@@ -30,11 +34,31 @@ export default function ManageStoresScreen() {
   const exceptionStores = stores.filter((s: Store) => s.keywords);
   const regularStores = stores.filter((s: Store) => !s.keywords);
 
+  const handleDeleteStore = (store: Store) => {
+    Alert.alert(
+      'Usunąć sklep?',
+      `Czy na pewno chcesz usunąć sklep "${store.name}"?`,
+      [
+        { text: 'Anuluj', style: 'cancel' },
+        {
+          text: 'Usuń',
+          style: 'destructive',
+          onPress: () => deleteStoreMutation.mutate({ storeId: store.id }),
+        },
+      ]
+    );
+  };
+
   return (
-    <View className="flex-1 bg-gray-50">
+    <View className="flex-1 bg-gray-50" style={{ paddingTop: insets.top }}>
       <Stack.Screen options={{ title: 'Zarządzaj sklepami' }} />
 
-      <ScrollView className="flex-1 p-4">
+      <KeyboardAwareScrollView
+        className="flex-1 p-4"
+        contentContainerStyle={{ paddingBottom: insets.bottom + 20 }}
+        keyboardShouldPersistTaps="handled"
+        bottomOffset={150}
+      >
         {/* Regular Stores */}
         <Text className="text-sm font-semibold text-gray-500 uppercase tracking-wide mb-3 ml-1">
           Sklepy standardowe
@@ -94,13 +118,22 @@ export default function ManageStoresScreen() {
             </Text>
           ) : (
             exceptionStores.map((store: Store) => (
-              <View key={store.id} className="py-3 border-b border-gray-100 last:border-b-0">
-                <Text className="text-base font-medium text-gray-900">{store.name}</Text>
-                {store.keywords && (
-                  <Text className="text-sm text-gray-500 mt-1">
-                    Słowa kluczowe: {store.keywords}
-                  </Text>
-                )}
+              <View key={store.id} className="py-3 border-b border-gray-100 last:border-b-0 flex-row items-center justify-between">
+                <View className="flex-1">
+                  <Text className="text-base font-medium text-gray-900">{store.name}</Text>
+                  {store.keywords && (
+                    <Text className="text-sm text-gray-500 mt-1">
+                      Słowa kluczowe: {store.keywords}
+                    </Text>
+                  )}
+                </View>
+                <Pressable
+                  onPress={() => handleDeleteStore(store)}
+                  disabled={deleteStoreMutation.isPending}
+                  className="p-2 ml-2"
+                >
+                  <Text className="text-red-500 text-lg">🗑</Text>
+                </Pressable>
               </View>
             ))
           )}
@@ -113,7 +146,7 @@ export default function ManageStoresScreen() {
             Produkty globalne są widoczne we wszystkich sklepach.
           </Text>
         </Card>
-      </ScrollView>
+      </KeyboardAwareScrollView>
     </View>
   );
 }

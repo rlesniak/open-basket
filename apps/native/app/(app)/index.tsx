@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { View, ScrollView, Text, Pressable, Platform } from 'react-native';
 import { Stack, useRouter } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import * as Haptics from 'expo-haptics';
 import { ProductInput } from '@/components/shopping/ProductInput';
 import { StoreSelector } from '@/components/shopping/StoreSelector';
@@ -13,6 +14,7 @@ import { Category } from '@/types/shopping';
 
 export default function ShoppingListScreen() {
   const router = useRouter();
+  const insets = useSafeAreaInsets();
   const [productInput, setProductInput] = useState('');
   const [selectedStoreId, setSelectedStoreId] = useState<string>('');
 
@@ -87,7 +89,7 @@ export default function ShoppingListScreen() {
   const purchasedProducts = products.filter((p) => p.isPurchased);
 
   return (
-    <View className="flex-1 bg-gray-50" style={{ paddingTop: Platform.OS === 'android' ? 25 : 0 }}>
+    <View className="flex-1 bg-gray-50" style={{ paddingTop: insets.top, paddingBottom: insets.bottom }}>
       <StatusBar style="dark" />
       <Stack.Screen 
         options={{ 
@@ -115,7 +117,7 @@ export default function ShoppingListScreen() {
         isLoading={storesLoading}
       />
 
-      <ScrollView className="flex-1 px-4">
+      <ScrollView className="flex-1 px-4" contentContainerStyle={{ paddingBottom: 20 }}>
         {pendingProducts.length === 0 && purchasedProducts.length === 0 ? (
           <Text className="text-center text-gray-500 mt-8">
             Brak produktów na liście. Dodaj coś!

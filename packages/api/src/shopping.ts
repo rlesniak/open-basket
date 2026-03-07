@@ -52,16 +52,24 @@ const createExceptionStore = o
       .from(stores)
       .orderBy(stores.orderIndex)
       .then(rows => rows[rows.length - 1]?.maxOrder ?? 0);
-    
+
     const newStore = {
       id,
       name: input.name,
       orderIndex: maxOrder + 1,
       keywords: input.keywords,
     };
-    
+
     await db.insert(stores).values(newStore);
     return newStore;
+  });
+
+const deleteExceptionStore = o
+  .input(z.object({ storeId: z.string() }))
+  .handler(async ({ input }) => {
+    await db
+      .delete(stores)
+      .where(eq(stores.id, input.storeId));
   });
 
 // Categories
@@ -208,7 +216,8 @@ const updateProduct = o
 export const shoppingRouter = {
   // Stores
   getStores,
-  createExceptionStore, // NEW
+  createExceptionStore,
+  deleteExceptionStore,
   // Categories
   getCategories,
   getStoreCategoryOrders,

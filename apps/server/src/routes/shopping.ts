@@ -1,7 +1,7 @@
 import { Hono } from 'hono';
 import { zValidator } from '@hono/zod-validator';
 import { z } from 'zod';
-import { parseProductInput, matchStoreFromKeywords } from '../lib/ai-parser';
+import { parseProductInput } from '../lib/ai-parser';
 import { db } from '@listonic/db';
 import { stores } from '@listonic/db/schema';
 
@@ -18,17 +18,24 @@ export const shoppingRoute = new Hono()
     const { input } = c.req.valid('json');
 
     try {
-      const parsed = await parseProductInput(input);
-
-      // Get all stores to match against keywords
+      // Get all stores to include in system prompt
       const allStores = await db.select().from(stores);
-      const matchedStoreId = await matchStoreFromKeywords(parsed.store, allStores);
+      const parsed = await parseProductInput(input, allStores);
+
+      // Validate that returned storeId exists
+      const validStoreId = parsed.storeId && allStores.some(s => s.id === parsed.storeId)
+        ? parsed.storeId
+        : null;
 
       return c.json({
         success: true,
         data: {
-          ...parsed,
-          assignedStoreId: matchedStoreId
+          name: parsed.name,
+          qty: parsed.qty,
+          unit: parsed.unit,
+          note: parsed.note,
+          category: parsed.category,
+          assignedStoreId: validStoreId
         }
       });
     } catch (error) {

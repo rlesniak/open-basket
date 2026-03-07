@@ -26,6 +26,22 @@ export const useCreateExceptionStore = () => {
   });
 };
 
+export const useDeleteExceptionStore = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: (data: { storeId: string }) =>
+      client.shopping.deleteExceptionStore(data),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['shopping', 'getStores'] });
+      Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
+    },
+    onError: () => {
+      Haptics.notificationAsync(Haptics.NotificationFeedbackType.Error);
+    },
+  });
+};
+
 export const useCategories = () => {
   return useQuery({
     queryKey: ['shopping', 'getCategories'],
@@ -126,15 +142,23 @@ export const useUpdateCategoryOrder = () => {
 
 export const useFilteredProducts = (selectedStoreId: string) => {
   const { data: products = [], ...rest } = useProducts();
+  const { data: stores = [] } = useStores();
 
   const filteredProducts = useMemo(() => {
+    const selectedStore = stores.find((s) => s.id === selectedStoreId);
+    const isExceptionalStore = selectedStore?.keywords !== null;
+
     return products.filter((product) => {
-      // If product has no assigned store, it's global - show everywhere
-      if (!product.assignedStoreId) return true;
-      // If product has assigned store, only show in that store
-      return product.assignedStoreId === selectedStoreId;
+      if (isExceptionalStore) {
+        // For exceptional stores: show ONLY products assigned to this store
+        return product.assignedStoreId === selectedStoreId;
+      } else {
+        // For regular stores: show global products + products assigned to this store
+        if (!product.assignedStoreId) return true;
+        return product.assignedStoreId === selectedStoreId;
+      }
     });
-  }, [products, selectedStoreId]);
+  }, [products, selectedStoreId, stores]);
 
   return { data: filteredProducts, ...rest };
 };

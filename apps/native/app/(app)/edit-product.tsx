@@ -1,7 +1,8 @@
 import { useState, useEffect } from 'react';
-import { View, ScrollView, ActivityIndicator, Text, TextInput, Pressable } from 'react-native';
+import { View, ScrollView, ActivityIndicator, Text, TextInput, Pressable, KeyboardAvoidingView, Platform } from 'react-native';
 import { router, useLocalSearchParams } from 'expo-router';
 import { Stack } from 'expo-router/stack';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { Button, Card, Spinner } from 'heroui-native';
 import { useCategories, useProducts, useStores, useUpdateProduct } from '@/hooks/shopping/useShopping';
 import { Category, Store } from '@/types/shopping';
@@ -21,6 +22,7 @@ const CATEGORY_EMOJIS: Record<string, string> = {
 
 export default function EditProductModal() {
   const { id } = useLocalSearchParams<{ id: string }>();
+  const insets = useSafeAreaInsets();
   const { data: products = [] } = useProducts();
   const { data: categories = [] } = useCategories();
   const { data: stores = [] } = useStores();
@@ -83,7 +85,7 @@ export default function EditProductModal() {
   const isValid = name.trim() && selectedCategoryId;
 
   return (
-    <View className="flex-1 bg-gray-50">
+    <View className="flex-1 bg-gray-50" style={{ paddingTop: insets.top }}>
       <Stack.Screen
         options={{
           title: 'Edytuj produkt',
@@ -110,7 +112,12 @@ export default function EditProductModal() {
         }}
       />
 
-      <ScrollView className="flex-1 p-4">
+      <KeyboardAvoidingView
+        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+        className="flex-1"
+        keyboardVerticalOffset={Platform.OS === 'ios' ? 64 : 0}
+      >
+        <ScrollView className="flex-1 p-4" contentContainerStyle={{ paddingBottom: insets.bottom + 20 }}>
         <Card className="p-5">
           {/* Product Name */}
           <View className="mb-5">
@@ -324,6 +331,7 @@ export default function EditProductModal() {
           </View>
         </Card>
       </ScrollView>
+      </KeyboardAvoidingView>
     </View>
   );
 }

@@ -1,14 +1,16 @@
 import { ScrollView, Pressable, Text, View } from 'react-native';
 import { useRouter } from 'expo-router';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { Card } from 'heroui-native';
 import { useStores } from '@/hooks/shopping/useShopping';
 
 export default function SettingsScreen() {
   const router = useRouter();
+  const insets = useSafeAreaInsets();
   const { data: stores } = useStores();
 
   return (
-    <ScrollView className="flex-1 p-4">
+    <ScrollView className="flex-1 p-4" style={{ paddingTop: insets.top, paddingBottom: insets.bottom }}>
       <Text className="text-sm text-gray-500 mb-4 uppercase font-semibold">
         Sklepy
       </Text>
