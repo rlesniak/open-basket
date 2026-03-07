@@ -12,6 +12,8 @@
   "dependencies": {
     "@ai-sdk/devtools": "^0.0.2",
     "@ai-sdk/google": "^3.0.1",
+    "@ai-sdk/openai": "^3.0.41",
+    "@hono/zod-validator": "^0.7.6",
     "@listonic/api": "workspace:*",
     "@listonic/db": "workspace:*",
     "@listonic/env": "workspace:*",

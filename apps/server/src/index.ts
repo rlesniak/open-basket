@@ -12,6 +12,7 @@ import { streamText, convertToModelMessages, wrapLanguageModel } from "ai";
 import { Hono } from "hono";
 import { cors } from "hono/cors";
 import { logger } from "hono/logger";
+import { shoppingRoute } from "./routes/shopping";
 
 const app = new Hono();
 
@@ -87,5 +88,7 @@ app.post("/ai", async (c) => {
 app.get("/", (c) => {
   return c.text("OK");
 });
+
+app.route("/shopping", shoppingRoute);
 
 export default app;
