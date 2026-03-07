@@ -7,7 +7,7 @@ import { ProductInput } from '@/components/shopping/ProductInput';
 import { StoreSelector } from '@/components/shopping/StoreSelector';
 import { ProductList } from '@/components/shopping/ProductList';
 import { PurchasedSection } from '@/components/shopping/PurchasedSection';
-import { useStores, useCategories, useFilteredProducts, useStoreCategoryOrders, useAddProduct, useToggleProduct, useClearPurchased } from '@/hooks/shopping/useShopping';
+import { useStores, useCategories, useProducts, useFilteredProducts, useStoreCategoryOrders, useAddProduct, useToggleProduct, useClearPurchased } from '@/hooks/shopping/useShopping';
 import { useProductParser } from '@/hooks/shopping/useProductParser';
 import { Category } from '@/types/shopping';
 
@@ -18,7 +18,9 @@ export default function ShoppingListScreen() {
 
   const { data: stores = [], isLoading: storesLoading } = useStores();
   const { data: categories = [] } = useCategories();
-  // Use filtered products based on selected store
+  // All products for store selector (to count products in each store)
+  const { data: allProducts = [] } = useProducts();
+  // Filtered products based on selected store for display
   const { data: products = [] } = useFilteredProducts(selectedStoreId);
   const { data: storeCategoryOrders = [] } = useStoreCategoryOrders(selectedStoreId);
   
@@ -107,6 +109,7 @@ export default function ShoppingListScreen() {
 
       <StoreSelector
         stores={stores}
+        products={allProducts}
         selectedStoreId={selectedStoreId}
         onSelectStore={setSelectedStoreId}
         isLoading={storesLoading}
