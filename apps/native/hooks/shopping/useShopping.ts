@@ -62,12 +62,24 @@ export const useToggleProduct = () => {
 
 export const useClearPurchased = () => {
   const queryClient = useQueryClient();
-  
+
   return useMutation({
     mutationFn: () => client.shopping.clearPurchased(),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['shopping', 'getProducts'] });
       Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
+    },
+  });
+};
+
+export const useUpdateCategoryOrder = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: (data: { storeId: string; categoryId: string; orderIndex: number }) =>
+      client.shopping.updateCategoryOrder(data),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['shopping', 'getStoreCategoryOrders'] });
     },
   });
 };
