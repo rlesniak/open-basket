@@ -15,6 +15,7 @@ const ProductSchema = z.object({
   note: z.string().nullable(),
   categoryId: z.string(),
   isPurchased: z.boolean(),
+  assignedStoreId: z.string().nullable(), // NEW
   createdAt: z.number(),
 });
 
@@ -22,6 +23,7 @@ const StoreSchema = z.object({
   id: z.string(),
   name: z.string(),
   orderIndex: z.number(),
+  keywords: z.string().nullable(), // NEW
 });
 
 const CategorySchema = z.object({
@@ -35,6 +37,31 @@ const getStores = o
   .handler(async () => {
     const result = await db.select().from(stores).orderBy(stores.orderIndex);
     return result;
+  });
+
+const createExceptionStore = o
+  .input(z.object({
+    name: z.string(),
+    keywords: z.string(),
+  }))
+  .output(StoreSchema)
+  .handler(async ({ input }) => {
+    const id = input.name.toLowerCase().replace(/\s+/g, '-');
+    const maxOrder = await db
+      .select({ maxOrder: stores.orderIndex })
+      .from(stores)
+      .orderBy(stores.orderIndex)
+      .then(rows => rows[rows.length - 1]?.maxOrder ?? 0);
+    
+    const newStore = {
+      id,
+      name: input.name,
+      orderIndex: maxOrder + 1,
+      keywords: input.keywords,
+    };
+    
+    await db.insert(stores).values(newStore);
+    return newStore;
   });
 
 // Categories
@@ -94,6 +121,7 @@ const addProduct = o
     unit: z.string().nullable(),
     note: z.string().nullable(),
     categoryId: z.string(),
+    assignedStoreId: z.string().nullable(), // NEW
   }))
   .output(ProductSchema)
   .handler(async ({ input }) => {
@@ -107,6 +135,7 @@ const addProduct = o
       unit: input.unit,
       note: input.note,
       categoryId: input.categoryId,
+      assignedStoreId: input.assignedStoreId, // NEW
       isPurchased: false,
       createdAt,
     };
@@ -147,6 +176,7 @@ const updateProduct = o
     unit: z.string().nullable(),
     note: z.string().nullable(),
     categoryId: z.string(),
+    assignedStoreId: z.string().nullable(), // NEW
   }))
   .output(ProductSchema)
   .handler(async ({ input }) => {
@@ -158,6 +188,7 @@ const updateProduct = o
         unit: input.unit,
         note: input.note,
         categoryId: input.categoryId,
+        assignedStoreId: input.assignedStoreId, // NEW
       })
       .where(eq(products.id, input.productId));
 
@@ -177,6 +208,7 @@ const updateProduct = o
 export const shoppingRouter = {
   // Stores
   getStores,
+  createExceptionStore, // NEW
   // Categories
   getCategories,
   getStoreCategoryOrders,
