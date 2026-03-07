@@ -2,17 +2,7 @@ import { View, Text } from 'react-native';
 import { useMemo } from 'react';
 import { Product, Category, StoreCategoryOrder } from '@/types/shopping';
 import { ProductItem } from '@/components/shopping/ProductItem';
-
-const CATEGORY_EMOJIS: Record<string, string> = {
-  'owoce': '🍎',
-  'warzywa': '🥕',
-  'nabial': '🥛',
-  'mieso': '🥩',
-  'pieczywo': '🥖',
-  'napoje': '🥤',
-  'chemia': '🧴',
-  'slodycze': '🍬',
-};
+import { getCategoryEmoji } from '@/shared/constants/category-emojis';
 
 interface ProductListProps {
   products: Product[];
@@ -22,6 +12,7 @@ interface ProductListProps {
   onEditProduct?: (productId: string) => void;
   togglePending: boolean;
   pendingProductId?: string;
+  isLoading?: boolean;
 }
 
 export const ProductList = ({
@@ -32,11 +23,12 @@ export const ProductList = ({
   onEditProduct,
   togglePending,
   pendingProductId,
+  isLoading,
 }: ProductListProps) => {
   const categoryMap = useMemo(() => {
     const map: Record<string, string> = {};
     categories.forEach((c) => {
-      const emoji = CATEGORY_EMOJIS[c.id] || '📦';
+      const emoji = getCategoryEmoji(c.id);
       map[c.id] = `${emoji} ${c.name}`;
     });
     return map;
@@ -68,6 +60,14 @@ export const ProductList = ({
       return orderA - orderB;
     });
   }, [groupedProducts, orderMap]);
+
+  if (isLoading) {
+    return (
+      <View className="flex-1 justify-center items-center py-8">
+        <Text className="text-gray-400">Ładowanie...</Text>
+      </View>
+    );
+  }
 
   if (sortedCategoryIds.length === 0) {
     return null;

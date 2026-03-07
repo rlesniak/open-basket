@@ -11,4 +11,5 @@ export const openrouter = createOpenAI({
 
 export const OPENROUTER_MODELS = {
   GPT4O_MINI: 'openai/gpt-4o-mini',
+  GEMINI_3_1_FLASH: 'google/gemini-3.1-flash-lite-preview'
 } as const;

@@ -32,5 +32,5 @@ export type ParsedProduct = {
   qty: number | null;
   unit: string | null;
   note: string | null;
-  category: string;
+  categoryId: string;
 };

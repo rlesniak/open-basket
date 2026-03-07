@@ -6,19 +6,9 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { Button, Card, Spinner } from 'heroui-native';
 import { useCategories, useProducts, useStores, useUpdateProduct } from '@/hooks/shopping/useShopping';
 import { Category, Store } from '@/types/shopping';
+import { getCategoryEmoji } from '@/shared/constants/category-emojis';
 
 const UNITS = ['szt', 'kg', 'l', 'opak'] as const;
-
-const CATEGORY_EMOJIS: Record<string, string> = {
-  'owoce': '🍎',
-  'warzywa': '🥕',
-  'nabial': '🥛',
-  'mieso': '🥩',
-  'pieczywo': '🥖',
-  'napoje': '🥤',
-  'chemia': '🧴',
-  'slodycze': '🍬',
-};
 
 export default function EditProductModal() {
   const { id } = useLocalSearchParams<{ id: string }>();
@@ -148,7 +138,7 @@ export default function EditProductModal() {
               <View className="flex-row items-center">
                 {selectedCategory && (
                   <Text className="text-xl mr-2">
-                    {CATEGORY_EMOJIS[selectedCategory.id] || '📦'}
+                    {getCategoryEmoji(selectedCategory.id)}
                   </Text>
                 )}
                 <Text className="text-base text-gray-900">
@@ -175,7 +165,7 @@ export default function EditProductModal() {
                       }`}
                     >
                       <Text className="text-base mr-1.5">
-                        {CATEGORY_EMOJIS[category.id] || '📦'}
+                        {getCategoryEmoji(category.id)}
                       </Text>
                       <Text
                         className={`text-sm font-medium ${

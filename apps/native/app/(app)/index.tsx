@@ -10,7 +10,6 @@ import { ProductList } from '@/components/shopping/ProductList';
 import { PurchasedSection } from '@/components/shopping/PurchasedSection';
 import { useStores, useCategories, useProducts, useFilteredProducts, useStoreCategoryOrders, useAddProduct, useToggleProduct, useClearPurchased } from '@/hooks/shopping/useShopping';
 import { useProductParser } from '@/hooks/shopping/useProductParser';
-import { Category } from '@/types/shopping';
 
 export default function ShoppingListScreen() {
   const router = useRouter();
@@ -24,7 +23,7 @@ export default function ShoppingListScreen() {
   const { data: allProducts = [] } = useProducts();
   // Filtered products based on selected store for display
   const { data: products = [] } = useFilteredProducts(selectedStoreId);
-  const { data: storeCategoryOrders = [] } = useStoreCategoryOrders(selectedStoreId);
+  const { data: storeCategoryOrders = [], isLoading: categoryOrdersLoading } = useStoreCategoryOrders(selectedStoreId);
   
   const addProductMutation = useAddProduct();
   const toggleProductMutation = useToggleProduct();
@@ -48,22 +47,12 @@ export default function ShoppingListScreen() {
       return;
     }
 
-    const category = categories.find(
-      (c: Category) => c.name.toLowerCase() === parsed.category.toLowerCase()
-    );
-
-    if (!category) {
-      console.error('Category not found:', parsed.category);
-      Haptics.notificationAsync(Haptics.NotificationFeedbackType.Error);
-      return;
-    }
-
     await addProductMutation.mutateAsync({
       name: parsed.name,
       qty: parsed.qty,
       unit: parsed.unit,
       note: parsed.note,
-      categoryId: category.id,
+      categoryId: parsed.categoryId,
       assignedStoreId: parsed.assignedStoreId || null,
     });
 
@@ -132,6 +121,7 @@ export default function ShoppingListScreen() {
               onEditProduct={handleEditProduct}
               togglePending={toggleProductMutation.isPending}
               pendingProductId={toggleProductMutation.variables?.productId}
+              isLoading={categoryOrdersLoading}
             />
 
             <PurchasedSection

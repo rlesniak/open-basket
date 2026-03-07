@@ -50,48 +50,45 @@ export const StoreSelector = ({ stores, products, selectedStoreId, onSelectStore
   const { sorted: sortedStores, counts: productCounts } = storeData;
 
   return (
-    <View className="px-4 pb-2">
+    <View className={`px-4 pb-2 ${isLoading ? 'opacity-50' : ''}`}>
       <Text className="text-sm text-gray-600 mb-2">Wybierz sklep:</Text>
       <ScrollView horizontal showsHorizontalScrollIndicator={false} className="flex-row">
-        {isLoading ? (
-          <Text className="text-gray-500">Ładowanie sklepów...</Text>
-        ) : (
-          sortedStores.map((store) => {
-            const productCount = productCounts.get(store.id) ?? 0;
-            const isExceptional = !!store.keywords;
-            
-            return (
-              <Pressable
-                key={store.id}
-                onPress={() => handleSelectStore(store.id)}
-                className={`mr-2 px-4 py-2 rounded-full border-2 flex-row items-center ${
-                  selectedStoreId === store.id
-                    ? `${STORE_COLORS[store.name] || 'bg-blue-500'} border-transparent`
-                    : 'bg-white border-gray-300'
+        {sortedStores.map((store) => {
+          const productCount = productCounts.get(store.id) ?? 0;
+          const isExceptional = !!store.keywords;
+          
+          return (
+            <Pressable
+              key={store.id}
+              onPress={() => handleSelectStore(store.id)}
+              disabled={isLoading}
+              className={`mr-2 px-4 py-2 rounded-full border-2 flex-row items-center ${
+                selectedStoreId === store.id
+                  ? `${STORE_COLORS[store.name] || 'bg-blue-500'} border-transparent`
+                  : 'bg-white border-gray-300'
+              }`}
+            >
+              <Text
+                className={`font-medium ${
+                  selectedStoreId === store.id ? 'text-white' : 'text-gray-700'
                 }`}
               >
-                <Text
-                  className={`font-medium ${
-                    selectedStoreId === store.id ? 'text-white' : 'text-gray-700'
-                  }`}
-                >
-                  {store.name}
-                </Text>
-                {isExceptional && productCount > 0 && (
-                  <View className={`ml-2 px-2 py-0.5 rounded-full ${
-                    selectedStoreId === store.id ? 'bg-white/30' : 'bg-gray-200'
+                {store.name}
+              </Text>
+              {isExceptional && productCount > 0 && (
+                <View className={`ml-2 px-2 py-0.5 rounded-full ${
+                  selectedStoreId === store.id ? 'bg-white/30' : 'bg-gray-200'
+                }`}>
+                  <Text className={`text-xs font-semibold ${
+                    selectedStoreId === store.id ? 'text-white' : 'text-gray-600'
                   }`}>
-                    <Text className={`text-xs font-semibold ${
-                      selectedStoreId === store.id ? 'text-white' : 'text-gray-600'
-                    }`}>
-                      {productCount}
-                    </Text>
-                  </View>
-                )}
-              </Pressable>
-            );
-          })
-        )}
+                    {productCount}
+                  </Text>
+                </View>
+              )}
+            </Pressable>
+          );
+        })}
       </ScrollView>
     </View>
   );

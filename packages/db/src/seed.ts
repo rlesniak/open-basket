@@ -1,7 +1,13 @@
 import { db } from './client';
 import { stores, categories, storeCategoryOrders, DEFAULT_STORES, DEFAULT_CATEGORIES } from './schema';
+import { notInArray } from 'drizzle-orm';
 
 export async function seedDatabase() {
+  // Clean up old data with non-existent category IDs
+  const validCategoryIds = DEFAULT_CATEGORIES.map(c => c.id);
+  await db.delete(storeCategoryOrders).where(notInArray(storeCategoryOrders.categoryId, validCategoryIds));
+  await db.delete(categories).where(notInArray(categories.id, validCategoryIds));
+
   // Insert stores
   for (const store of DEFAULT_STORES) {
     await db.insert(stores).values(store).onConflictDoNothing();

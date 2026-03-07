@@ -41,13 +41,24 @@ export const DEFAULT_STORES = [
 ];
 
 export const DEFAULT_CATEGORIES = [
-  { id: 'owoce', name: 'Owoce' },
-  { id: 'warzywa', name: 'Warzywa' },
-  { id: 'nabial', name: 'Nabiał' },
-  { id: 'mieso', name: 'Mięso' },
+  { id: 'owoce-warzywa', name: 'Owoce i warzywa' },
   { id: 'pieczywo', name: 'Pieczywo' },
-  { id: 'napoje', name: 'Napoje' },
-  { id: 'chemia', name: 'Chemia' },
-  { id: 'slodycze', name: 'Słodycze' },
-  { id: 'inne', name: 'Inne'}
+  { id: 'pieczenie', name: 'Pieczenie i dodatki' },
+  { id: 'nabial-jajka', name: 'Nabiał i jajka' },
+  { id: 'sypkie', name: 'Sypkie' },
+  { id: 'ryby', name: 'Ryby' },
+  { id: 'mrozonki', name: 'Mrożonki' },
+  { id: 'konserwy', name: 'Konserwy i przetwory' },
+  { id: 'mieso-wedliny', name: 'Mięso i wędliny' },
+  { id: 'slodycze-przekaski', name: 'Słodycze i przekąski' },
+  { id: 'przyprawy', name: 'Przyprawy, sosy i oleje' },
+  { id: 'woda-napoje', name: 'Woda i napoje' },
+  { id: 'kawa-herbata', name: 'Kawa i herbata' },
+  { id: 'alkohole', name: 'Alkohole' },
+  { id: 'higiena', name: 'Higiena' },
+  { id: 'dziecko', name: 'Dziecko' },
+  { id: 'apteczka', name: 'Apteczka' },
+  { id: 'dom-ogrod', name: 'Dom i ogród' },
+  { id: 'czystosc', name: 'Środki czystości' },
+  { id: 'inne', name: 'Inne' }
 ];

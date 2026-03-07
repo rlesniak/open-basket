@@ -3,7 +3,7 @@ import { zValidator } from '@hono/zod-validator';
 import { z } from 'zod';
 import { parseProductInput } from '../lib/ai-parser';
 import { db } from '@listonic/db';
-import { stores } from '@listonic/db/schema';
+import { stores, categories } from '@listonic/db/schema';
 
 const parseSchema = z.object({
   input: z.string().min(1),
@@ -18,14 +18,18 @@ export const shoppingRoute = new Hono()
     const { input } = c.req.valid('json');
 
     try {
-      // Get all stores to include in system prompt
+      // Get all stores and categories to include in system prompt
       const allStores = await db.select().from(stores);
-      const parsed = await parseProductInput(input, allStores);
+      const allCategories = await db.select().from(categories);
+      const parsed = await parseProductInput(input, allStores, allCategories);
 
-      // Validate that returned storeId exists
+      // Validate that returned IDs exist
       const validStoreId = parsed.storeId && allStores.some(s => s.id === parsed.storeId)
         ? parsed.storeId
         : null;
+      const validCategoryId = allCategories.some(c => c.id === parsed.categoryId)
+        ? parsed.categoryId
+        : 'inne';
 
       return c.json({
         success: true,
@@ -34,7 +38,7 @@ export const shoppingRoute = new Hono()
           qty: parsed.qty,
           unit: parsed.unit,
           note: parsed.note,
-          category: parsed.category,
+          categoryId: validCategoryId,
           assignedStoreId: validStoreId
         }
       });

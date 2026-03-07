@@ -10,6 +10,7 @@ import {
   useStoreCategoryOrders,
   useUpdateCategoryOrder,
 } from '@/hooks/shopping/useShopping';
+import { getCategoryEmoji } from '@/shared/constants/category-emojis';
 
 export default function StoreOrderScreen() {
   const { id } = useLocalSearchParams<{ id: string }>();
@@ -73,6 +74,7 @@ export default function StoreOrderScreen() {
             <Card.Body className="flex-row justify-between items-center">
               <View className="flex-row items-center">
                 <Text className="text-gray-400 w-8">{index + 1}</Text>
+                <Text className="text-xl mr-2">{getCategoryEmoji(category.id)}</Text>
                 <Text className="text-lg">{category.name}</Text>
               </View>
 
