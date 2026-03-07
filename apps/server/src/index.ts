@@ -2,6 +2,7 @@ import { devToolsMiddleware } from "@ai-sdk/devtools";
 import { google } from "@ai-sdk/google";
 import { createContext } from "@listonic/api/context";
 import { appRouter } from "@listonic/api/routers/index";
+import { seedDatabase } from "@listonic/db/seed";
 import { env } from "@listonic/env/server";
 import { OpenAPIHandler } from "@orpc/openapi/fetch";
 import { OpenAPIReferencePlugin } from "@orpc/openapi/plugins";
@@ -13,6 +14,10 @@ import { Hono } from "hono";
 import { cors } from "hono/cors";
 import { logger } from "hono/logger";
 import { shoppingRoute } from "./routes/shopping";
+
+// Seed database on startup
+await seedDatabase();
+console.log("Database seeded successfully");
 
 const app = new Hono();
 

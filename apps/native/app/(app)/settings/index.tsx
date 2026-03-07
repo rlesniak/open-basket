@@ -1,9 +1,10 @@
 import { View, ScrollView, Pressable, Text } from 'react-native';
-import { Link } from 'expo-router';
+import { useRouter } from 'expo-router';
 import { Card } from 'heroui-native';
 import { useStores } from '@/hooks/shopping/useShopping';
 
 export default function SettingsScreen() {
+  const router = useRouter();
   const { data: stores } = useStores();
 
   return (
@@ -13,16 +14,18 @@ export default function SettingsScreen() {
       </Text>
 
       {stores?.map((store) => (
-        <Link key={store.id} href={`/settings/store/${store.id}`} asChild>
-          <Pressable className="mb-2">
-            <Card>
-              <Card.Body className="flex-row justify-between items-center">
-                <Text className="text-lg">{store.name}</Text>
-                <Text className="text-gray-400">›</Text>
-              </Card.Body>
-            </Card>
-          </Pressable>
-        </Link>
+        <Pressable
+          key={store.id}
+          onPress={() => router.push(`/settings/store/${store.id}` as any)}
+          className="mb-2"
+        >
+          <Card>
+            <Card.Body className="flex-row justify-between items-center">
+              <Text className="text-lg">{store.name}</Text>
+              <Text className="text-gray-400">›</Text>
+            </Card.Body>
+          </Card>
+        </Pressable>
       ))}
 
       <Text className="text-xs text-gray-500 mt-4">

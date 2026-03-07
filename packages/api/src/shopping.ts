@@ -2,7 +2,10 @@ import { z } from 'zod';
 import { eq } from 'drizzle-orm';
 import { db } from '@listonic/db';
 import { stores, categories, storeCategoryOrders, products } from '@listonic/db/schema';
-import { o } from './index';
+import { os } from '@orpc/server';
+import type { Context } from './context';
+
+const o = os.$context<Context>();
 
 const ProductSchema = z.object({
   id: z.string(),
