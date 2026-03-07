@@ -2,6 +2,7 @@ export type Store = {
   id: string;
   name: string;
   orderIndex: number;
+  keywords: string | null; // NEW
 };
 
 export type Category = {
@@ -17,6 +18,7 @@ export type Product = {
   note: string | null;
   categoryId: string;
   isPurchased: boolean;
+  assignedStoreId: string | null; // NEW
   createdAt: number;
 };
 
