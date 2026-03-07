@@ -1,7 +1,7 @@
 import { View, Text } from 'react-native';
 import { Card } from 'heroui-native';
-import { Product, Category, StoreCategoryOrder } from '../types/shopping';
-import { ProductItem } from './ProductItem';
+import { Product, Category, StoreCategoryOrder } from '@/types/shopping';
+import { ProductItem } from '@/components/shopping/ProductItem';
 
 interface ProductListProps {
   products: Product[];

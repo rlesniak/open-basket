@@ -1,6 +1,6 @@
 import { useState, useCallback } from 'react';
 import { env } from '@listonic/env/native';
-import { ParsedProduct } from '../types/shopping';
+import { ParsedProduct } from '@/types/shopping';
 
 export const useProductParser = () => {
   const [isParsing, setIsParsing] = useState(false);

@@ -2,13 +2,13 @@ import { useState, useEffect } from 'react';
 import { View, ScrollView, Text } from 'react-native';
 import { Stack } from 'expo-router';
 import * as Haptics from 'expo-haptics';
-import { ProductInput } from './components/ProductInput';
-import { StoreSelector } from './components/StoreSelector';
-import { ProductList } from './components/ProductList';
-import { PurchasedSection } from './components/PurchasedSection';
-import { useStores, useCategories, useProducts, useStoreCategoryOrders, useAddProduct, useToggleProduct, useClearPurchased } from './hooks/useShopping';
-import { useProductParser } from './hooks/useProductParser';
-import { Category } from './types/shopping';
+import { ProductInput } from '@/components/shopping/ProductInput';
+import { StoreSelector } from '@/components/shopping/StoreSelector';
+import { ProductList } from '@/components/shopping/ProductList';
+import { PurchasedSection } from '@/components/shopping/PurchasedSection';
+import { useStores, useCategories, useProducts, useStoreCategoryOrders, useAddProduct, useToggleProduct, useClearPurchased } from '@/hooks/shopping/useShopping';
+import { useProductParser } from '@/hooks/shopping/useProductParser';
+import { Category } from '@/types/shopping';
 
 export default function ShoppingListScreen() {
   const [productInput, setProductInput] = useState('');

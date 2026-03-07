@@ -1,4 +1,4 @@
-import { Product } from '../types/shopping';
+import { Product } from '@/types/shopping';
 
 export const formatProductText = (product: Product): string => {
   let text = product.name;

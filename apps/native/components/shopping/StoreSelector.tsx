@@ -1,7 +1,7 @@
 import { View, ScrollView, Pressable, Text } from 'react-native';
 import * as Haptics from 'expo-haptics';
-import { Store } from '../types/shopping';
-import { STORE_COLORS } from '../utils/constants';
+import { Store } from '@/types/shopping';
+import { STORE_COLORS } from '@/utils/shopping/constants';
 
 interface StoreSelectorProps {
   stores: Store[];

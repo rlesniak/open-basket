@@ -1,8 +1,8 @@
 import { View, Pressable, Text } from 'react-native';
 import * as Haptics from 'expo-haptics';
 import { Card, Spinner } from 'heroui-native';
-import { Product } from '../types/shopping';
-import { ProductItem } from './ProductItem';
+import { Product } from '@/types/shopping';
+import { ProductItem } from '@/components/shopping/ProductItem';
 
 interface PurchasedSectionProps {
   products: Product[];

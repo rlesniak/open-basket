@@ -1,7 +1,7 @@
 import { View, Pressable, Text } from 'react-native';
 import { Card, Spinner } from 'heroui-native';
-import { Product } from '../types/shopping';
-import { formatProductText } from '../utils/formatters';
+import { Product } from '@/types/shopping';
+import { formatProductText } from '@/utils/shopping/formatters';
 
 interface ProductItemProps {
   product: Product;
