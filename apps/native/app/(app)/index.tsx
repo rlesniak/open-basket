@@ -7,7 +7,7 @@ import { ProductInput } from '@/components/shopping/ProductInput';
 import { StoreSelector } from '@/components/shopping/StoreSelector';
 import { ProductList } from '@/components/shopping/ProductList';
 import { PurchasedSection } from '@/components/shopping/PurchasedSection';
-import { useStores, useCategories, useProducts, useStoreCategoryOrders, useAddProduct, useToggleProduct, useClearPurchased } from '@/hooks/shopping/useShopping';
+import { useStores, useCategories, useFilteredProducts, useStoreCategoryOrders, useAddProduct, useToggleProduct, useClearPurchased } from '@/hooks/shopping/useShopping';
 import { useProductParser } from '@/hooks/shopping/useProductParser';
 import { Category } from '@/types/shopping';
 
@@ -18,7 +18,8 @@ export default function ShoppingListScreen() {
 
   const { data: stores = [], isLoading: storesLoading } = useStores();
   const { data: categories = [] } = useCategories();
-  const { data: products = [] } = useProducts();
+  // Use filtered products based on selected store
+  const { data: products = [] } = useFilteredProducts(selectedStoreId);
   const { data: storeCategoryOrders = [] } = useStoreCategoryOrders(selectedStoreId);
   
   const addProductMutation = useAddProduct();
@@ -59,6 +60,7 @@ export default function ShoppingListScreen() {
       unit: parsed.unit,
       note: parsed.note,
       categoryId: category.id,
+      assignedStoreId: parsed.assignedStoreId || null,
     });
 
     setProductInput('');
