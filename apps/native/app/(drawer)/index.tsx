@@ -1,15 +1,17 @@
 import { Ionicons } from "@expo/vector-icons";
 import { useQuery } from "@tanstack/react-query";
-import { Button, Chip, Separator, Spinner, Surface, useThemeColor } from "heroui-native";
+import { Button, Chip, Separator, Spinner, Surface } from "heroui-native";
 import { Text, View } from "react-native";
 
 import { Container } from "@/components/container";
 import { orpc } from "@/utils/orpc";
 
+// Light mode colors
+const SUCCESS_COLOR = "#17C964";
+const DANGER_COLOR = "#F31260";
+
 export default function Home() {
   const healthCheck = useQuery(orpc.healthCheck.queryOptions());
-  const successColor = useThemeColor("success");
-  const dangerColor = useThemeColor("danger");
 
   const isConnected = healthCheck?.data === "OK";
   const isLoading = healthCheck?.isLoading;
@@ -50,10 +52,10 @@ export default function Home() {
             </View>
             {isLoading && <Spinner size="sm" />}
             {!isLoading && isConnected && (
-              <Ionicons name="checkmark-circle" size={18} color={successColor} />
+              <Ionicons name="checkmark-circle" size={18} color={SUCCESS_COLOR} />
             )}
             {!isLoading && !isConnected && (
-              <Ionicons name="close-circle" size={18} color={dangerColor} />
+              <Ionicons name="close-circle" size={18} color={DANGER_COLOR} />
             )}
           </View>
         </Surface>

@@ -11,12 +11,15 @@ import {
   Surface,
   Input,
   TextField,
-  useThemeColor,
 } from "heroui-native";
 import { useRef, useEffect, useState } from "react";
 import { View, Text, ScrollView, KeyboardAvoidingView, Platform } from "react-native";
 
 import { Container } from "@/components/container";
+
+// Light mode colors
+const FOREGROUND_COLOR = "#11181C";
+const MUTED_COLOR = "#889096";
 
 const generateAPIUrl = (relativePath: string) => {
   const serverUrl = env.EXPO_PUBLIC_SERVER_URL;
@@ -37,8 +40,6 @@ export default function AIScreen() {
     onError: (error) => console.error(error, "AI Chat Error"),
   });
   const scrollViewRef = useRef<ScrollView>(null);
-  const foregroundColor = useThemeColor("foreground");
-  const mutedColor = useThemeColor("muted");
   const isBusy = status === "submitted" || status === "streaming";
 
   useEffect(() => {
@@ -94,7 +95,7 @@ export default function AIScreen() {
                 variant="secondary"
                 className="flex-1 justify-center items-center py-8 rounded-xl"
               >
-                <Ionicons name="chatbubble-ellipses-outline" size={32} color={mutedColor} />
+                <Ionicons name="chatbubble-ellipses-outline" size={32} color={MUTED_COLOR} />
                 <Text className="text-muted text-sm mt-3">Ask me anything to get started</Text>
               </Surface>
             ) : (
@@ -167,7 +168,7 @@ export default function AIScreen() {
               <Ionicons
                 name="arrow-up"
                 size={18}
-                color={input.trim() && !isBusy ? foregroundColor : mutedColor}
+                color={input.trim() && !isBusy ? FOREGROUND_COLOR : MUTED_COLOR}
               />
             </Button>
           </View>
