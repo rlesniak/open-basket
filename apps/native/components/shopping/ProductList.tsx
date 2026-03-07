@@ -1,8 +1,18 @@
 import { View, Text } from 'react-native';
-import { Card } from 'heroui-native';
 import { useMemo } from 'react';
 import { Product, Category, StoreCategoryOrder } from '@/types/shopping';
 import { ProductItem } from '@/components/shopping/ProductItem';
+
+const CATEGORY_EMOJIS: Record<string, string> = {
+  'owoce': '🍎',
+  'warzywa': '🥕',
+  'nabial': '🥛',
+  'mieso': '🥩',
+  'pieczywo': '🥖',
+  'napoje': '🥤',
+  'chemia': '🧴',
+  'slodycze': '🍬',
+};
 
 interface ProductListProps {
   products: Product[];
@@ -24,7 +34,8 @@ export const ProductList = ({
   const categoryMap = useMemo(() => {
     const map: Record<string, string> = {};
     categories.forEach((c) => {
-      map[c.id] = c.name;
+      const emoji = CATEGORY_EMOJIS[c.id] || '📦';
+      map[c.id] = `${emoji} ${c.name}`;
     });
     return map;
   }, [categories]);
@@ -67,11 +78,17 @@ export const ProductList = ({
         const categoryName = categoryMap[categoryId] || 'Inne';
 
         return (
-          <View key={categoryId} className="mb-4">
-            <Text className="text-lg font-bold text-gray-800 mb-2 px-1">
-              {categoryName}
-            </Text>
-            <Card className="p-2">
+          <View key={categoryId} className="mb-6">
+            <View className="flex-row items-center mb-3 px-4">
+              <View className="w-1 h-5 bg-blue-500 rounded-full mr-2" />
+              <Text className="text-lg font-bold text-gray-800">
+                {categoryName}
+              </Text>
+              <Text className="text-sm text-gray-400 ml-2">
+                ({categoryProducts.length})
+              </Text>
+            </View>
+            <View>
               {categoryProducts.map((product, index) => (
                 <ProductItem
                   key={product.id}
@@ -81,7 +98,7 @@ export const ProductList = ({
                   isLast={index === categoryProducts.length - 1}
                 />
               ))}
-            </Card>
+            </View>
           </View>
         );
       })}

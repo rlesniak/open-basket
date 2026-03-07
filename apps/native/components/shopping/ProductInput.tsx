@@ -10,7 +10,7 @@ interface ProductInputProps {
 
 export const ProductInput = ({ value, onChangeText, onSubmit, isLoading }: ProductInputProps) => {
   return (
-    <Card className="m-4 p-4">
+    <Card className="m-4 mt-0 p-4">
       <View className="flex-row gap-2">
         <Input
           value={value}

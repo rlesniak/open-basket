@@ -1,6 +1,5 @@
-import { View, Pressable, Text } from 'react-native';
+import { View, Pressable, Text, ActivityIndicator } from 'react-native';
 import * as Haptics from 'expo-haptics';
-import { Card, Spinner } from 'heroui-native';
 import { Product } from '@/types/shopping';
 import { ProductItem } from '@/components/shopping/ProductItem';
 
@@ -27,22 +26,28 @@ export const PurchasedSection = ({
   };
 
   return (
-    <View className="mb-4">
-      <View className="flex-row items-center justify-between mb-2 px-1">
-        <Text className="text-lg font-bold text-gray-500">Kupione</Text>
+    <View className="mb-6">
+      <View className="flex-row items-center justify-between mb-3 px-4">
+        <View className="flex-row items-center">
+          <View className="w-1 h-5 bg-green-500 rounded-full mr-2" />
+          <Text className="text-lg font-bold text-gray-500">Kupione</Text>
+          <Text className="text-sm text-gray-400 ml-2">
+            ({products.length})
+          </Text>
+        </View>
         <Pressable
           onPress={handleClear}
           disabled={isClearing}
-          className="px-3 py-1 rounded bg-red-100"
+          className="px-4 py-2 rounded-xl bg-red-50"
         >
           {isClearing ? (
-            <Spinner size="sm" />
+            <ActivityIndicator size="small" color="#EF4444" />
           ) : (
-            <Text className="text-red-600 text-sm font-medium">Wyczyść</Text>
+            <Text className="text-red-500 text-sm font-semibold">Wyczyść</Text>
           )}
         </Pressable>
       </View>
-      <Card className="p-2 bg-gray-100">
+      <View>
         {products.map((product, index) => (
           <ProductItem
             key={product.id}
@@ -53,7 +58,7 @@ export const PurchasedSection = ({
             isPurchased
           />
         ))}
-      </Card>
+      </View>
     </View>
   );
 };
