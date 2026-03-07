@@ -1,4 +1,4 @@
-import { View, ScrollView, Pressable, Text } from 'react-native';
+import { ScrollView, Pressable, Text, View } from 'react-native';
 import { useRouter } from 'expo-router';
 import { Card } from 'heroui-native';
 import { useStores } from '@/hooks/shopping/useShopping';
@@ -31,6 +31,25 @@ export default function SettingsScreen() {
       <Text className="text-xs text-gray-500 mt-4">
         Kliknij sklep, aby ustawić kolejność kategorii według układu sklepu
       </Text>
+
+      <Text className="text-sm text-gray-500 mb-4 uppercase font-semibold mt-8">
+        Zarządzanie
+      </Text>
+
+      <Pressable
+        onPress={() => router.push('/settings/stores' as any)}
+        className="mb-2"
+      >
+        <Card>
+          <Card.Body className="flex-row justify-between items-center">
+            <View>
+              <Text className="text-lg">Sklepy wyjątkowe</Text>
+              <Text className="text-sm text-gray-500">Zarządzaj sklepami i słowami kluczowymi</Text>
+            </View>
+            <Text className="text-gray-400">›</Text>
+          </Card.Body>
+        </Card>
+      </Pressable>
     </ScrollView>
   );
 }

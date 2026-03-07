@@ -17,6 +17,10 @@ export default function AppLayout() {
         options={{ title: "Kolejność kategorii" }}
       />
       <Stack.Screen
+        name="settings/stores"
+        options={{ title: "Zarządzaj sklepami" }}
+      />
+      <Stack.Screen
         name="edit-product"
         options={{
           presentation: "modal",
