@@ -1,0 +1,17 @@
+{
+  "expo": {
+    "scheme": "listonic",
+    "userInterfaceStyle": "automatic",
+    "orientation": "default",
+    "web": {
+      "bundler": "metro"
+    },
+    "name": "listonic",
+    "slug": "listonic",
+    "plugins": ["expo-font"],
+    "experiments": {
+      "typedRoutes": true,
+      "reactCompiler": true
+    }
+  }
+}
