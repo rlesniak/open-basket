@@ -4,6 +4,7 @@ export const stores = sqliteTable('stores', {
   id: text('id').primaryKey(),
   name: text('name').notNull(),
   orderIndex: integer('order_index').notNull(),
+  keywords: text('keywords'), // Comma-separated keywords like "deli,z deli"
 });
 
 export const categories = sqliteTable('categories', {
@@ -27,6 +28,7 @@ export const products = sqliteTable('products', {
   note: text('note'), // Additional info like "3.2%", "koniecznie z cisowianka"
   categoryId: text('category_id').notNull(),
   isPurchased: integer('is_purchased', { mode: 'boolean' }).notNull().default(false),
+  assignedStoreId: text('assigned_store_id'), // null = global product, else specific store
   createdAt: integer('created_at').notNull(),
 });
 
