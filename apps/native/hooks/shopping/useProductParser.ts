@@ -5,10 +5,10 @@ import { ParsedProduct } from '@/types/shopping';
 export const useProductParser = () => {
   const [isParsing, setIsParsing] = useState(false);
 
-  const parseProduct = useCallback(async (input: string): Promise<ParsedProduct | null> => {
+  const parseProduct = useCallback(async (input: string): Promise<(ParsedProduct & { assignedStoreId: string | null }) | null> => {
     setIsParsing(true);
     try {
-      const response = await fetch(`${env.EXPO_PUBLIC_SERVER_URL}/shopping/parse-product`, {
+      const response = await fetch(`${env.EXPO_PUBLIC_SERVER_URL}/shopping/parse-product-with-store`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ input }),
