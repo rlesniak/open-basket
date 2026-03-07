@@ -20,7 +20,7 @@ export default function Home() {
         <Text className="text-3xl font-semibold text-foreground tracking-tight">
           Better T Stack
         </Text>
-        <Text className="text-muted text-sm mt-1">Full-stack TypeScript starter</Text>
+        <Text className="text-muted text-sm mt-1">{JSON.stringify(healthCheck.error)}</Text>
       </View>
 
       <Surface variant="secondary" className="p-4 rounded-xl">
