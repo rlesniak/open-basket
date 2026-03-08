@@ -16,7 +16,7 @@ const ProductSchema = z.object({
   categoryId: z.string(),
   isPurchased: z.boolean(),
   assignedStoreId: z.string().nullable(), // NEW
-  createdAt: z.number(),
+  createdAt: z.date(),
 });
 
 const StoreSchema = z.object({
@@ -134,7 +134,7 @@ const addProduct = o
   .output(ProductSchema)
   .handler(async ({ input }) => {
     const id = crypto.randomUUID();
-    const createdAt = Date.now();
+    const createdAt = new Date();
     
     const newProduct = {
       id,

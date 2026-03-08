@@ -13,18 +13,16 @@
     }
   },
   "scripts": {
-    "db:local": "turso dev --db-file local.db",
     "db:push": "drizzle-kit push",
     "db:generate": "drizzle-kit generate",
     "db:studio": "drizzle-kit studio",
     "db:migrate": "drizzle-kit migrate"
   },
   "dependencies": {
-    "@libsql/client": "0.15.15",
     "@open-basket/env": "workspace:*",
     "dotenv": "catalog:",
     "drizzle-orm": "^0.45.1",
-    "libsql": "0.5.22",
+    "postgres": "^3.4.5",
     "zod": "catalog:"
   },
   "devDependencies": {

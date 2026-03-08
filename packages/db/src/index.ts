@@ -1,13 +1,8 @@
-import { createClient } from "@libsql/client";
-import { env } from "@open-basket/env/server";
-import { drizzle } from "drizzle-orm/libsql";
+import { drizzle } from 'drizzle-orm/postgres-js';
+import postgres from 'postgres';
+import * as schema from './schema';
 
-import * as schema from "./schema";
+const client = postgres(process.env.DATABASE_URL || '');
 
-const client = createClient({
-  url: env.DATABASE_URL,
-});
-
-export const db = drizzle({ client, schema });
-export * from "./seed";
-export * from "./schema";
+export const db = drizzle(client, { schema });
+export * from './schema';

@@ -1,18 +1,18 @@
-import { sqliteTable, text, integer, primaryKey } from 'drizzle-orm/sqlite-core';
+import { pgTable, text, integer, boolean, timestamp, primaryKey } from 'drizzle-orm/pg-core';
 
-export const stores = sqliteTable('stores', {
+export const stores = pgTable('stores', {
   id: text('id').primaryKey(),
   name: text('name').notNull(),
   orderIndex: integer('order_index').notNull(),
   keywords: text('keywords'), // Comma-separated keywords like "deli,z deli"
 });
 
-export const categories = sqliteTable('categories', {
+export const categories = pgTable('categories', {
   id: text('id').primaryKey(),
   name: text('name').notNull(),
 });
 
-export const storeCategoryOrders = sqliteTable('store_category_orders', {
+export const storeCategoryOrders = pgTable('store_category_orders', {
   storeId: text('store_id').notNull(),
   categoryId: text('category_id').notNull(),
   orderIndex: integer('order_index').notNull(),
@@ -20,16 +20,16 @@ export const storeCategoryOrders = sqliteTable('store_category_orders', {
   pk: primaryKey({ columns: [table.storeId, table.categoryId] }),
 }));
 
-export const products = sqliteTable('products', {
+export const products = pgTable('products', {
   id: text('id').primaryKey(),
   name: text('name').notNull(),
   qty: integer('qty'), // Only whole numbers, null if not specified
   unit: text('unit'), // "szt", "kg", "l", etc. or null
   note: text('note'), // Additional info like "3.2%", "koniecznie z cisowianka"
   categoryId: text('category_id').notNull(),
-  isPurchased: integer('is_purchased', { mode: 'boolean' }).notNull().default(false),
+  isPurchased: boolean('is_purchased').notNull().default(false),
   assignedStoreId: text('assigned_store_id'), // null = global product, else specific store
-  createdAt: integer('created_at').notNull(),
+  createdAt: timestamp('created_at').notNull().defaultNow(),
 });
 
 // Default data

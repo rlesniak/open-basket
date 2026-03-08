@@ -37,6 +37,7 @@
   "dependencies": {
     "@open-basket/env": "workspace:*",
     "dotenv": "catalog:",
+    "postgres": "^3.4.8",
     "zod": "catalog:"
   },
   "devDependencies": {
