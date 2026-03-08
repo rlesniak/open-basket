@@ -32,7 +32,7 @@
     "db:generate": "turbo -F @open-basket/db db:generate",
     "db:migrate": "turbo -F @open-basket/db db:migrate",
     "db:local": "turbo -F @open-basket/db db:local",
-    "start": "drizzle-kit push && bun run apps/server/dist/index.mjs"
+    "start": "cd packages/db && bunx drizzle-kit push --force && cd ../.. && bun run apps/server/dist/index.mjs"
   },
   "dependencies": {
     "@open-basket/env": "workspace:*",
