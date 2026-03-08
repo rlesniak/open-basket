@@ -8,10 +8,15 @@
     },
     "name": "open-basket",
     "slug": "open-basket",
-    "plugins": ["expo-font"],
+    "plugins": [
+      "expo-font"
+    ],
     "experiments": {
       "typedRoutes": true,
       "reactCompiler": true
+    },
+    "android": {
+      "package": "com.rafalpl.openbasket"
     }
   }
 }
