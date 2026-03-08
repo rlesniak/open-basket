@@ -1,5 +1,7 @@
 # Dependencies
 node_modules
+.claude
+.agents
 .pnp
 .pnp.js
 
