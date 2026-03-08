@@ -31,7 +31,8 @@
     "db:studio": "turbo -F @open-basket/db db:studio",
     "db:generate": "turbo -F @open-basket/db db:generate",
     "db:migrate": "turbo -F @open-basket/db db:migrate",
-    "db:local": "turbo -F @open-basket/db db:local"
+    "db:local": "turbo -F @open-basket/db db:local",
+    "start": "bun run apps/server/dist/index.mjs"
   },
   "dependencies": {
     "@open-basket/env": "workspace:*",
