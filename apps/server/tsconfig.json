@@ -1,5 +1,5 @@
 {
-  "extends": "@listonic/config/tsconfig.base.json",
+  "extends": "@open-basket/config/tsconfig.base.json",
   "compilerOptions": {
     "composite": true,
     "outDir": "dist",

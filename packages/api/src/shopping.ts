@@ -1,7 +1,7 @@
 import { z } from 'zod';
 import { eq } from 'drizzle-orm';
-import { db } from '@listonic/db';
-import { stores, categories, storeCategoryOrders, products } from '@listonic/db/schema';
+import { db } from '@open-basket/db';
+import { stores, categories, storeCategoryOrders, products } from '@open-basket/db/schema';
 import { os } from '@orpc/server';
 import type { Context } from './context';
 

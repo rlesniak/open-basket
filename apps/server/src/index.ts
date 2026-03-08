@@ -1,9 +1,9 @@
 import { devToolsMiddleware } from "@ai-sdk/devtools";
 import { google } from "@ai-sdk/google";
-import { createContext } from "@listonic/api/context";
-import { appRouter } from "@listonic/api/routers/index";
-import { seedDatabase } from "@listonic/db/seed";
-import { env } from "@listonic/env/server";
+import { createContext } from "@open-basket/api/context";
+import { appRouter } from "@open-basket/api/routers/index";
+import { seedDatabase } from "@open-basket/db/seed";
+import { env } from "@open-basket/env/server";
 import { OpenAPIHandler } from "@orpc/openapi/fetch";
 import { OpenAPIReferencePlugin } from "@orpc/openapi/plugins";
 import { onError } from "@orpc/server";

@@ -1,6 +1,6 @@
 import { useChat } from "@ai-sdk/react";
 import { Ionicons } from "@expo/vector-icons";
-import { env } from "@listonic/env/native";
+import { env } from "@open-basket/env/native";
 import { DefaultChatTransport } from "ai";
 import { fetch as expoFetch } from "expo/fetch";
 import {

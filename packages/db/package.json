@@ -1,5 +1,5 @@
 {
-  "name": "@listonic/db",
+  "name": "@open-basket/db",
   "type": "module",
   "exports": {
     ".": {
@@ -21,14 +21,14 @@
   },
   "dependencies": {
     "@libsql/client": "0.15.15",
-    "@listonic/env": "workspace:*",
+    "@open-basket/env": "workspace:*",
     "dotenv": "catalog:",
     "drizzle-orm": "^0.45.1",
     "libsql": "0.5.22",
     "zod": "catalog:"
   },
   "devDependencies": {
-    "@listonic/config": "workspace:*",
+    "@open-basket/config": "workspace:*",
     "drizzle-kit": "^0.31.8",
     "typescript": "catalog:"
   }

@@ -1,5 +1,5 @@
 import { useState, useCallback } from 'react';
-import { env } from '@listonic/env/native';
+import { env } from '@open-basket/env/native';
 import { ParsedProduct } from '@/types/shopping';
 
 export const useProductParser = () => {

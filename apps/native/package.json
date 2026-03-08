@@ -16,8 +16,8 @@
     "@expo/metro-runtime": "~55.0.6",
     "@expo/vector-icons": "^15.0.3",
     "@gorhom/bottom-sheet": "^5",
-    "@listonic/api": "workspace:*",
-    "@listonic/env": "workspace:*",
+    "@open-basket/api": "workspace:*",
+    "@open-basket/env": "workspace:*",
     "@orpc/client": "catalog:",
     "@orpc/tanstack-query": "^1.12.2",
     "@react-navigation/drawer": "^7.3.9",
@@ -56,7 +56,7 @@
     "zod": "catalog:"
   },
   "devDependencies": {
-    "@listonic/config": "workspace:*",
+    "@open-basket/config": "workspace:*",
     "@types/node": "^24.10.0",
     "@types/react": "~19.2.10",
     "typescript": "catalog:"

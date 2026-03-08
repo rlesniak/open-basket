@@ -4,8 +4,8 @@ export const openrouter = createOpenAI({
   apiKey: process.env.OPENROUTER_API_KEY,
   baseURL: 'https://openrouter.ai/api/v1',
   headers: {
-    'HTTP-Referer': 'https://listonic.app',
-    'X-Title': 'Listonic Shopping App',
+    'HTTP-Referer': 'https://open-basket.app',
+    'X-Title': 'Open Basket Shopping App',
   },
 });
 

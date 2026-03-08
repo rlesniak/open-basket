@@ -2,8 +2,8 @@ import { Hono } from 'hono';
 import { zValidator } from '@hono/zod-validator';
 import { z } from 'zod';
 import { parseProductInput } from '../lib/ai-parser';
-import { db } from '@listonic/db';
-import { stores, categories } from '@listonic/db/schema';
+import { db } from '@open-basket/db';
+import { stores, categories } from '@open-basket/db/schema';
 
 const parseSchema = z.object({
   input: z.string().min(1),

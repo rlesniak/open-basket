@@ -14,9 +14,9 @@
     "@ai-sdk/google": "^3.0.1",
     "@ai-sdk/openai": "^3.0.41",
     "@hono/zod-validator": "^0.7.6",
-    "@listonic/api": "workspace:*",
-    "@listonic/db": "workspace:*",
-    "@listonic/env": "workspace:*",
+    "@open-basket/api": "workspace:*",
+    "@open-basket/db": "workspace:*",
+    "@open-basket/env": "workspace:*",
     "@orpc/openapi": "catalog:",
     "@orpc/server": "catalog:",
     "@orpc/zod": "catalog:",
@@ -26,7 +26,7 @@
     "zod": "catalog:"
   },
   "devDependencies": {
-    "@listonic/config": "workspace:*",
+    "@open-basket/config": "workspace:*",
     "@types/bun": "catalog:",
     "tsdown": "^0.16.5",
     "typescript": "catalog:"

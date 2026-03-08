@@ -1,5 +1,5 @@
 {
-  "name": "@listonic/api",
+  "name": "@open-basket/api",
   "type": "module",
   "exports": {
     ".": {
@@ -11,8 +11,8 @@
   },
   "scripts": {},
   "dependencies": {
-    "@listonic/db": "workspace:*",
-    "@listonic/env": "workspace:*",
+    "@open-basket/db": "workspace:*",
+    "@open-basket/env": "workspace:*",
     "@orpc/client": "catalog:",
     "@orpc/openapi": "catalog:",
     "@orpc/server": "catalog:",
@@ -22,7 +22,7 @@
     "zod": "catalog:"
   },
   "devDependencies": {
-    "@listonic/config": "workspace:*",
+    "@open-basket/config": "workspace:*",
     "hono": "catalog:",
     "typescript": "catalog:"
   }

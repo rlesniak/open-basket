@@ -1,6 +1,6 @@
-import type { AppRouterClient } from "@listonic/api/routers/index";
+import type { AppRouterClient } from "@open-basket/api/routers/index";
 
-import { env } from "@listonic/env/native";
+import { env } from "@open-basket/env/native";
 import { createORPCClient } from "@orpc/client";
 import { RPCLink } from "@orpc/client/fetch";
 import { createTanstackQueryUtils } from "@orpc/tanstack-query";

@@ -5,12 +5,12 @@
     "": {
       "name": "listonic",
       "dependencies": {
-        "@listonic/env": "workspace:*",
+        "@open-basket/env": "workspace:*",
         "dotenv": "catalog:",
         "zod": "catalog:",
       },
       "devDependencies": {
-        "@listonic/config": "workspace:*",
+        "@open-basket/config": "workspace:*",
         "@types/bun": "catalog:",
         "turbo": "^2.8.12",
         "typescript": "catalog:",
@@ -24,8 +24,8 @@
         "@expo/metro-runtime": "~55.0.6",
         "@expo/vector-icons": "^15.0.3",
         "@gorhom/bottom-sheet": "^5",
-        "@listonic/api": "workspace:*",
-        "@listonic/env": "workspace:*",
+        "@open-basket/api": "workspace:*",
+        "@open-basket/env": "workspace:*",
         "@orpc/client": "catalog:",
         "@orpc/tanstack-query": "^1.12.2",
         "@react-navigation/drawer": "^7.3.9",
@@ -64,7 +64,7 @@
         "zod": "catalog:",
       },
       "devDependencies": {
-        "@listonic/config": "workspace:*",
+        "@open-basket/config": "workspace:*",
         "@types/node": "^24.10.0",
         "@types/react": "~19.2.10",
         "typescript": "catalog:",
@@ -77,9 +77,9 @@
         "@ai-sdk/google": "^3.0.1",
         "@ai-sdk/openai": "^3.0.41",
         "@hono/zod-validator": "^0.7.6",
-        "@listonic/api": "workspace:*",
-        "@listonic/db": "workspace:*",
-        "@listonic/env": "workspace:*",
+        "@open-basket/api": "workspace:*",
+        "@open-basket/db": "workspace:*",
+        "@open-basket/env": "workspace:*",
         "@orpc/openapi": "catalog:",
         "@orpc/server": "catalog:",
         "@orpc/zod": "catalog:",
@@ -89,17 +89,17 @@
         "zod": "catalog:",
       },
       "devDependencies": {
-        "@listonic/config": "workspace:*",
+        "@open-basket/config": "workspace:*",
         "@types/bun": "catalog:",
         "tsdown": "^0.16.5",
         "typescript": "catalog:",
       },
     },
     "packages/api": {
-      "name": "@listonic/api",
+      "name": "@open-basket/api",
       "dependencies": {
-        "@listonic/db": "workspace:*",
-        "@listonic/env": "workspace:*",
+        "@open-basket/db": "workspace:*",
+        "@open-basket/env": "workspace:*",
         "@orpc/client": "catalog:",
         "@orpc/openapi": "catalog:",
         "@orpc/server": "catalog:",
@@ -109,33 +109,33 @@
         "zod": "catalog:",
       },
       "devDependencies": {
-        "@listonic/config": "workspace:*",
+        "@open-basket/config": "workspace:*",
         "hono": "catalog:",
         "typescript": "catalog:",
       },
     },
     "packages/config": {
-      "name": "@listonic/config",
+      "name": "@open-basket/config",
       "version": "0.0.0",
     },
     "packages/db": {
-      "name": "@listonic/db",
+      "name": "@open-basket/db",
       "dependencies": {
         "@libsql/client": "0.15.15",
-        "@listonic/env": "workspace:*",
+        "@open-basket/env": "workspace:*",
         "dotenv": "catalog:",
         "drizzle-orm": "^0.45.1",
         "libsql": "0.5.22",
         "zod": "catalog:",
       },
       "devDependencies": {
-        "@listonic/config": "workspace:*",
+        "@open-basket/config": "workspace:*",
         "drizzle-kit": "^0.31.8",
         "typescript": "catalog:",
       },
     },
     "packages/env": {
-      "name": "@listonic/env",
+      "name": "@open-basket/env",
       "version": "0.0.0",
       "dependencies": {
         "@t3-oss/env-core": "^0.13.1",
@@ -143,7 +143,7 @@
         "zod": "catalog:",
       },
       "devDependencies": {
-        "@listonic/config": "workspace:*",
+        "@open-basket/config": "workspace:*",
         "@types/bun": "catalog:",
         "typescript": "catalog:",
       },
@@ -556,17 +556,17 @@
 
     "@libsql/win32-x64-msvc": ["@libsql/win32-x64-msvc@0.5.22", "", { "os": "win32", "cpu": "x64" }, "sha512-Fj0j8RnBpo43tVZUVoNK6BV/9AtDUM5S7DF3LB4qTYg1LMSZqi3yeCneUTLJD6XomQJlZzbI4mst89yspVSAnA=="],
 
-    "@listonic/api": ["@listonic/api@workspace:packages/api"],
-
-    "@listonic/config": ["@listonic/config@workspace:packages/config"],
-
-    "@listonic/db": ["@listonic/db@workspace:packages/db"],
-
-    "@listonic/env": ["@listonic/env@workspace:packages/env"],
-
     "@napi-rs/wasm-runtime": ["@napi-rs/wasm-runtime@1.1.1", "", { "dependencies": { "@emnapi/core": "^1.7.1", "@emnapi/runtime": "^1.7.1", "@tybys/wasm-util": "^0.10.1" } }, "sha512-p64ah1M1ld8xjWv3qbvFwHiFVWrq1yFvV4f7w+mzaqiR4IlSgkqhcRdHwsGgomwzBH51sRY4NEowLxnaBjcW/A=="],
 
     "@neon-rs/load": ["@neon-rs/load@0.0.4", "", {}, "sha512-kTPhdZyTQxB+2wpiRcFWrDcejc4JI6tkPuS7UZCG4l6Zvc5kU/gGQ/ozvHTh1XR5tS+UlfAfGuPajjzQjCiHCw=="],
+
+    "@open-basket/api": ["@open-basket/api@workspace:packages/api"],
+
+    "@open-basket/config": ["@open-basket/config@workspace:packages/config"],
+
+    "@open-basket/db": ["@open-basket/db@workspace:packages/db"],
+
+    "@open-basket/env": ["@open-basket/env@workspace:packages/env"],
 
     "@opentelemetry/api": ["@opentelemetry/api@1.9.0", "", {}, "sha512-3giAOQvZiH5F9bMlMiv8+GSPMeqg0dbaeo58/0SlA9sxSqZhnUtxzX9/2FzyhS9sWQf5S0GJE0AKBrFqjpeYcg=="],
 

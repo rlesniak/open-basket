@@ -1,5 +1,5 @@
 import { createClient } from "@libsql/client";
-import { env } from "@listonic/env/server";
+import { env } from "@open-basket/env/server";
 import { drizzle } from "drizzle-orm/libsql";
 
 import * as schema from "./schema";

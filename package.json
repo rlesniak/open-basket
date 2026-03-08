@@ -1,5 +1,5 @@
 {
-  "name": "listonic",
+  "name": "open-basket",
   "private": true,
   "workspaces": {
     "packages": [
@@ -27,19 +27,19 @@
     "dev:native": "turbo -F native dev",
     "dev:web": "turbo -F web dev",
     "dev:server": "turbo -F server dev",
-    "db:push": "turbo -F @listonic/db db:push",
-    "db:studio": "turbo -F @listonic/db db:studio",
-    "db:generate": "turbo -F @listonic/db db:generate",
-    "db:migrate": "turbo -F @listonic/db db:migrate",
-    "db:local": "turbo -F @listonic/db db:local"
+    "db:push": "turbo -F @open-basket/db db:push",
+    "db:studio": "turbo -F @open-basket/db db:studio",
+    "db:generate": "turbo -F @open-basket/db db:generate",
+    "db:migrate": "turbo -F @open-basket/db db:migrate",
+    "db:local": "turbo -F @open-basket/db db:local"
   },
   "dependencies": {
-    "@listonic/env": "workspace:*",
+    "@open-basket/env": "workspace:*",
     "dotenv": "catalog:",
     "zod": "catalog:"
   },
   "devDependencies": {
-    "@listonic/config": "workspace:*",
+    "@open-basket/config": "workspace:*",
     "@types/bun": "catalog:",
     "turbo": "^2.8.12",
     "typescript": "catalog:"

@@ -1,4 +1,4 @@
-# listonic
+# Open Basket
 
 This project was created with [Better-T-Stack](https://github.com/AmanVarshney01/create-better-t-stack), a modern TypeScript stack that combines Hono, ORPC, and more.
 
@@ -55,7 +55,7 @@ The API is running at [http://localhost:3000](http://localhost:3000).
 ## Project Structure
 
 ```
-listonic/
+open-basket/
 ├── apps/
 │   ├── web/         # Frontend application ()
 │   ├── native/      # Mobile application (React Native, Expo)

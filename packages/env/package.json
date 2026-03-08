@@ -1,5 +1,5 @@
 {
-  "name": "@listonic/env",
+  "name": "@open-basket/env",
   "version": "0.0.0",
   "private": true,
   "type": "module",
@@ -13,7 +13,7 @@
     "zod": "catalog:"
   },
   "devDependencies": {
-    "@listonic/config": "workspace:*",
+    "@open-basket/config": "workspace:*",
     "@types/bun": "catalog:",
     "typescript": "catalog:"
   }

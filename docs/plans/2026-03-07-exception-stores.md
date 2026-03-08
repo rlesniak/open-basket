@@ -355,8 +355,8 @@ git commit -m "feat(ai): add store detection to natural language parser"
 **Step 1: Add endpoint to get stores with keywords**
 
 ```typescript
-import { db } from '@listonic/db';
-import { stores } from '@listonic/db/schema';
+import { db } from '@open-basket/db';
+import { stores } from '@open-basket/db/schema';
 
 // Add GET endpoint
 shoppingRoute.get('/stores', async (c) => {
