@@ -1,6 +1,6 @@
 import { createId } from "@paralleldrive/cuid2";
 import { integer, sqliteTable, text } from "drizzle-orm/sqlite-core";
-import { categories } from "./categories.js";
+import { categories } from "./categories";
 
 export const categoryMappings = sqliteTable("category_mappings", {
   id: text("id")
