@@ -61,6 +61,9 @@ Keep AGENTS.md updated when:
 
 AI assistants should suggest updates to this file when they notice relevant changes.
 
+# IMPORTANT
+You must assume that your knowledge has a cutoff date, Due to this limitation, you should always look for relevant skills and use information from there. Only if you cant find relevant information, you should use your knowledge. Always prefer up-to-date information over your knowledge.
+
 # Ultracite Code Standards
 
 This project uses **Ultracite**, a zero-config preset that enforces strict code quality standards through automated formatting and linting.
