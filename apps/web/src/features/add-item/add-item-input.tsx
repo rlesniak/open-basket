@@ -1,4 +1,4 @@
-import { Loader2, Plus } from "lucide-react";
+import { IconLoader2, IconPlus } from "@tabler/icons-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useAddItem } from "./use-add-item";
@@ -26,9 +26,9 @@ export function AddItemInput() {
         />
         <Button disabled={isProcessing || !input.trim()} type="submit">
           {isProcessing ? (
-            <Loader2 className="h-4 w-4 animate-spin" />
+            <IconLoader2 className="h-4 w-4 animate-spin" />
           ) : (
-            <Plus className="h-4 w-4" />
+            <IconPlus className="h-4 w-4" />
           )}
         </Button>
       </div>
