@@ -15,7 +15,7 @@ This file provides context about the project for AI assistants.
 
 - Framework: tanstack-start
 - CSS: tailwind
-- UI Library: shadcn-ui
+- UI Library: shadcn-ui baseui
 
 ### Backend
 
@@ -52,7 +52,7 @@ open-basket/
 
 ## Maintenance
 
-Keep Agents.md updated when:
+Keep AGENTS.md updated when:
 
 - Adding/removing dependencies
 - Changing project structure
@@ -164,6 +164,11 @@ Write code that is **accessible, performant, type-safe, and maintainable**. Focu
 
 - Use `class` and `for` attributes (not `className` or `htmlFor`)
 
+**Tanstack Query**
+- Prefer `queryOption/mutationOptions` over `useQuery/useMutation` when extracting common
+- Use `useQuery` and `useMutation` only in the final UI component (screen or feature component) that needs to call the API, not in entities or shared hooks
+
+
 ---
 
 ## Testing
@@ -187,3 +192,17 @@ Biome's linter will catch most issues automatically. Focus your attention on:
 ---
 
 Most formatting and common issues are automatically fixed by Biome. Run `bun x ultracite fix` before committing to ensure compliance.
+
+## **Simplicity First**
+
+**Minimum code that solves the problem. Nothing speculative.**
+
+* No features beyond what was asked.
+* No abstractions for single-use code.
+* No "flexibility" or "configurability" that wasn't requested.
+* No error handling for impossible scenarios.
+* If you write 200 lines and it could be 50, rewrite it.
+
+**Ask yourself: "Would a senior engineer say this is overcomplicated?" If yes, simplify.**
+
+- After every update, please give me a % confidence that your change fixes the issue and a short explanation as to why.
