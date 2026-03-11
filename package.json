@@ -12,7 +12,8 @@
       "typescript": "^5.9.3",
       "@types/node": "^25.4.0",
       "@libsql/client": "^0.17.0",
-      "libsql": "0.5.22"
+      "libsql": "0.5.22",
+      "@paralleldrive/cuid2": "^2.2.2"
     }
   },
   "type": "module",

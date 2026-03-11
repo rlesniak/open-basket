@@ -19,6 +19,7 @@
   "dependencies": {
     "@libsql/client": "catalog:",
     "@open-basket/env": "workspace:*",
+    "@paralleldrive/cuid2": "catalog:",
     "dotenv": "catalog:",
     "drizzle-orm": "^0.45.1",
     "libsql": "catalog:",

@@ -76,6 +76,7 @@
       "dependencies": {
         "@libsql/client": "catalog:",
         "@open-basket/env": "workspace:*",
+        "@paralleldrive/cuid2": "catalog:",
         "dotenv": "catalog:",
         "drizzle-orm": "^0.45.1",
         "libsql": "catalog:",
@@ -104,6 +105,7 @@
   },
   "catalog": {
     "@libsql/client": "^0.17.0",
+    "@paralleldrive/cuid2": "^2.2.2",
     "@types/node": "^25.4.0",
     "dotenv": "^17.3.1",
     "libsql": "0.5.22",
@@ -396,6 +398,8 @@
     "@open-draft/until": ["@open-draft/until@2.1.0", "", {}, "sha512-U69T3ItWHvLwGg5eJ0n3I62nWuE6ilHlmz7zM0npLBRvPRd7e6NYmg54vvRtP5mZG7kZqZCFVdsTWo7BPtBujg=="],
 
     "@opentelemetry/api": ["@opentelemetry/api@1.9.0", "", {}, "sha512-3giAOQvZiH5F9bMlMiv8+GSPMeqg0dbaeo58/0SlA9sxSqZhnUtxzX9/2FzyhS9sWQf5S0GJE0AKBrFqjpeYcg=="],
+
+    "@paralleldrive/cuid2": ["@paralleldrive/cuid2@2.3.1", "", { "dependencies": { "@noble/hashes": "^1.1.5" } }, "sha512-XO7cAxhnTZl0Yggq6jOgjiOHhbgcO4NqFqwSmQpjK3b6TEE6Uj/jfSk6wzYyemh3+I0sHirKSetjQwn5cZktFw=="],
 
     "@rolldown/pluginutils": ["@rolldown/pluginutils@1.0.0-rc.3", "", {}, "sha512-eybk3TjzzzV97Dlj5c+XrBFW57eTNhzod66y9HrBlzJ6NsCrWCp/2kaPS3K9wJmurBC0Tdw4yPjXKZqlznim3Q=="],
 
