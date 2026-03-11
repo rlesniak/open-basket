@@ -25,7 +25,6 @@ export function StoreSelector({
         selectedStoreId={selectedStoreId}
         stores={stores}
       />
-      {/* @ts-expect-error Route will be added in future task */}
       <Link to="/stores">
         <Button size="icon" variant="ghost">
           <IconSettings />

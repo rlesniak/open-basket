@@ -1,3 +1,5 @@
+import { seedDatabase } from "@open-basket/db";
+import type { QueryClient } from "@tanstack/react-query";
 import {
   createRootRouteWithContext,
   HeadContent,
@@ -5,13 +7,21 @@ import {
   Scripts,
 } from "@tanstack/react-router";
 import { TanStackRouterDevtools } from "@tanstack/react-router-devtools";
+import { createServerFn } from "@tanstack/react-start";
 
 import { Toaster } from "@/components/ui/sonner";
 
 import Header from "../components/header";
 import appCss from "../index.css?url";
 
-export type RouterAppContext = {};
+export interface RouterAppContext {
+  queryClient: QueryClient;
+}
+
+const seedDbFn = createServerFn({ method: "GET" }).handler(async () => {
+  await seedDatabase();
+  return { success: true };
+});
 
 export const Route = createRootRouteWithContext<RouterAppContext>()({
   head: () => ({
@@ -34,6 +44,10 @@ export const Route = createRootRouteWithContext<RouterAppContext>()({
       },
     ],
   }),
+
+  loader: async () => {
+    await seedDbFn();
+  },
 
   component: RootDocument,
 });

@@ -10,12 +10,12 @@ export interface ShoppingItemWithCategory extends ShoppingItem {
   category: Category | null;
 }
 
-export type CreateShoppingItemInput = {
-  name: string;
-  quantity?: string | null;
+export interface CreateShoppingItemInput {
   categoryId?: string | null;
+  name: string;
   note?: string | null;
-};
+  quantity?: string | null;
+}
 
 export type UpdateShoppingItemInput = Partial<CreateShoppingItemInput> & {
   status?: "pending" | "purchased" | "cancelled";
