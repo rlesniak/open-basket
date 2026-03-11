@@ -10,6 +10,6 @@ export const storesQueryOptions = () =>
 export const storeWithCategoriesQueryOptions = (storeId: string) =>
   queryOptions({
     queryKey: ["stores", storeId, "categories"],
-    queryFn: () => getStoreWithCategories(),
+    queryFn: () => getStoreWithCategories({ data: storeId }),
     enabled: !!storeId,
   });

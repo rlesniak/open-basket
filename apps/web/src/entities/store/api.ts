@@ -6,9 +6,9 @@ export const getStores = createServerFn({ method: "GET" }).handler(async () => {
   return db.select().from(stores).orderBy(stores.name);
 });
 
-export const getStoreWithCategories = createServerFn({ method: "GET" }).handler(
-  async (ctx) => {
-    const storeId = (ctx as unknown as { data: string }).data;
+export const getStoreWithCategories = createServerFn({ method: "GET" })
+  .inputValidator((storeId: string) => storeId)
+  .handler(async ({ data: storeId }) => {
     const store = await db
       .select()
       .from(stores)
@@ -29,12 +29,11 @@ export const getStoreWithCategories = createServerFn({ method: "GET" }).handler(
       .orderBy(storeCategories.position);
 
     return { ...store, categories: cats };
-  }
-);
+  });
 
-export const createStore = createServerFn({ method: "POST" }).handler(
-  async (ctx) => {
-    const name = (ctx as unknown as { data: string }).data;
+export const createStore = createServerFn({ method: "POST" })
+  .inputValidator((name: string) => name)
+  .handler(async ({ data: name }) => {
     const allCategories = await db.select().from(categories);
 
     const store = await db.insert(stores).values({ name }).returning().get();
@@ -49,16 +48,14 @@ export const createStore = createServerFn({ method: "POST" }).handler(
     );
 
     return store;
-  }
-);
+  });
 
-export const updateCategoryOrder = createServerFn({ method: "POST" }).handler(
-  async (ctx) => {
-    const { storeId, categoryId, position } = (
-      ctx as unknown as {
-        data: { storeId: string; categoryId: string; position: number };
-      }
-    ).data;
+export const updateCategoryOrder = createServerFn({ method: "POST" })
+  .inputValidator(
+    (data: { storeId: string; categoryId: string; position: number }) => data
+  )
+  .handler(async ({ data }) => {
+    const { storeId, categoryId, position } = data;
     await db
       .update(storeCategories)
       .set({ position })
@@ -68,5 +65,4 @@ export const updateCategoryOrder = createServerFn({ method: "POST" }).handler(
           eq(storeCategories.categoryId, categoryId)
         )
       );
-  }
-);
+  });

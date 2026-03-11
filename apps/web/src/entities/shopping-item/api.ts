@@ -21,9 +21,9 @@ export const getShoppingItems = createServerFn({ method: "GET" }).handler(
   }
 );
 
-export const createShoppingItem = createServerFn({ method: "POST" }).handler(
-  async (ctx) => {
-    const data = (ctx as unknown as { data: CreateShoppingItemInput }).data;
+export const createShoppingItem = createServerFn({ method: "POST" })
+  .inputValidator((data: CreateShoppingItemInput) => data)
+  .handler(async ({ data }) => {
     const result = await db
       .insert(shoppingItems)
       .values({
@@ -35,16 +35,14 @@ export const createShoppingItem = createServerFn({ method: "POST" }).handler(
       })
       .returning();
     return result[0];
-  }
-);
+  });
 
-export const updateShoppingItem = createServerFn({ method: "POST" }).handler(
-  async (ctx) => {
-    const { id, input } = (
-      ctx as unknown as {
-        data: { id: string; input: UpdateShoppingItemInput };
-      }
-    ).data;
+export const updateShoppingItem = createServerFn({ method: "POST" })
+  .inputValidator(
+    (data: { id: string; input: UpdateShoppingItemInput }) => data
+  )
+  .handler(async ({ data }) => {
+    const { id, input } = data;
 
     // If category changed, update learning
     if (input.categoryId && input.name) {
@@ -60,15 +58,13 @@ export const updateShoppingItem = createServerFn({ method: "POST" }).handler(
       .where(eq(shoppingItems.id, id))
       .returning();
     return result[0];
-  }
-);
+  });
 
-export const deleteShoppingItem = createServerFn({ method: "POST" }).handler(
-  async (ctx) => {
-    const id = (ctx as unknown as { data: string }).data;
+export const deleteShoppingItem = createServerFn({ method: "POST" })
+  .inputValidator((id: string) => id)
+  .handler(async ({ data: id }) => {
     await db.delete(shoppingItems).where(eq(shoppingItems.id, id));
-  }
-);
+  });
 
 async function updateCategoryMapping(inputPattern: string, categoryId: string) {
   const existing = await db
