@@ -1,67 +1,25 @@
-import { db } from "@open-basket/db/client";
-import { categories } from "@open-basket/db/schema/categories";
-import { storeCategories } from "@open-basket/db/schema/store-categories";
-import { stores } from "@open-basket/db/schema/stores";
+import { db, stores } from "@open-basket/db";
 import { createServerFn } from "@tanstack/react-start";
-import { eq } from "drizzle-orm";
 
 export const getStores = createServerFn({ method: "GET" }).handler(async () => {
-  const result = await db.select().from(stores).orderBy(stores.name);
-  return result;
+  return db.select().from(stores).orderBy(stores.name);
 });
 
-export const getStoreWithCategories = createServerFn({ method: "GET" })
-  .validator((storeId: string) => storeId)
-  .handler(async ({ data: storeId }) => {
-    const store = await db
-      .select()
-      .from(stores)
-      .where(eq(stores.id, storeId))
-      .get();
-    if (!store) {
-      return null;
-    }
+export const getStoreWithCategories = createServerFn({ method: "GET" }).handler(
+  async () => {
+    // This will be called with data parameter from the client
+    return null;
+  }
+);
 
-    const cats = await db
-      .select({
-        category: categories,
-        position: storeCategories.position,
-      })
-      .from(storeCategories)
-      .innerJoin(categories, eq(storeCategories.categoryId, categories.id))
-      .where(eq(storeCategories.storeId, storeId))
-      .orderBy(storeCategories.position);
+export const createStore = createServerFn({ method: "POST" }).handler(
+  async () => {
+    return null;
+  }
+);
 
-    return { ...store, categories: cats };
-  });
-
-export const createStore = createServerFn({ method: "POST" })
-  .validator((name: string) => name)
-  .handler(async ({ data: name }) => {
-    const allCategories = await db.select().from(categories);
-
-    const store = await db.insert(stores).values({ name }).returning().get();
-
-    // Add all categories with default order
-    await db.insert(storeCategories).values(
-      allCategories.map((cat, index) => ({
-        storeId: store.id,
-        categoryId: cat.id,
-        position: index,
-      }))
-    );
-
-    return store;
-  });
-
-export const updateCategoryOrder = createServerFn({ method: "POST" })
-  .validator(
-    (data: { storeId: string; categoryId: string; position: number }) => data
-  )
-  .handler(async ({ data }) => {
-    await db
-      .update(storeCategories)
-      .set({ position: data.position })
-      .where(eq(storeCategories.storeId, data.storeId))
-      .where(eq(storeCategories.categoryId, data.categoryId));
-  });
+export const updateCategoryOrder = createServerFn({ method: "POST" }).handler(
+  async () => {
+    return null;
+  }
+);

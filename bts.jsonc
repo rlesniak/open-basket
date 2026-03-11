@@ -58,5 +58,5 @@
   "goApi": "none",
   "goCli": "none",
   "goLogging": "none",
-  "aiDocs": ["agents-md", "claude-md"],
+  "aiDocs": ["agents-md", "claude-md"]
 }
