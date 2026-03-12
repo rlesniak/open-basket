@@ -20,6 +20,7 @@ export function StoreDropdown({
   onStoreChange,
   disabled = false,
 }: StoreDropdownProps) {
+  console.log(stores);
   return (
     <Select
       disabled={disabled}
@@ -27,7 +28,9 @@ export function StoreDropdown({
       value={selectedStoreId ?? undefined}
     >
       <SelectTrigger className="w-[180px]">
-        <SelectValue placeholder="Select store..." />
+        <SelectValue placeholder="Select store...">
+          {stores.find((store) => store.id === selectedStoreId)?.name}
+        </SelectValue>
       </SelectTrigger>
       <SelectContent>
         {stores.map((store) => (

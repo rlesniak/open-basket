@@ -1,7 +1,17 @@
 import { IconArrowLeft } from "@tabler/icons-react";
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { createFileRoute, Link } from "@tanstack/react-router";
-import { useState } from "react";
+import {
+  useMutation,
+  useQuery,
+  useQueryClient,
+  useSuspenseQuery,
+} from "@tanstack/react-query";
+import {
+  createFileRoute,
+  Link,
+  redirect,
+  useNavigate,
+} from "@tanstack/react-router";
+import { z } from "zod";
 import { Button } from "@/components/ui/button";
 import { createStore, updateCategoryOrder } from "@/entities/store/api";
 import {
@@ -12,23 +22,55 @@ import { CategoryOrderEditor } from "@/features/store-management/category-order-
 import { CreateStoreForm } from "@/features/store-management/create-store-form";
 import { StoreList } from "@/features/store-management/store-list";
 
+const storesSearchSchema = z.object({
+  selectedStoreId: z.string().optional(),
+});
+
 export const Route = createFileRoute("/stores")({
+  validateSearch: storesSearchSchema,
+  beforeLoad: async ({ context, search }) => {
+    const stores = await context.queryClient.ensureQueryData(
+      storesQueryOptions()
+    );
+    const activeStoreId =
+      stores.find((store) => store.id === search.selectedStoreId)?.id ??
+      stores[0]?.id;
+
+    if (activeStoreId && search.selectedStoreId !== activeStoreId) {
+      throw redirect({
+        to: "/stores",
+        replace: true,
+        search: {
+          ...search,
+          selectedStoreId: activeStoreId,
+        },
+      });
+    }
+  },
   component: StoresComponent,
 });
 
 function StoresComponent() {
   const queryClient = useQueryClient();
-  const [selectedStoreId, setSelectedStoreId] = useState<string | null>(null);
-
-  const { data: stores } = useQuery(storesQueryOptions());
+  const navigate = useNavigate({ from: Route.fullPath });
+  const { selectedStoreId } = Route.useSearch();
+  const { data: stores } = useSuspenseQuery(storesQueryOptions());
   const { data: selectedStore, isLoading: isLoadingStore } = useQuery(
     storeWithCategoriesQueryOptions(selectedStoreId ?? "")
   );
 
   const createStoreMutation = useMutation({
     mutationFn: (name: string) => createStore({ data: name }),
-    onSuccess: () => {
+    onSuccess: (store) => {
       queryClient.invalidateQueries({ queryKey: ["stores"] });
+
+      navigate({
+        replace: true,
+        search: (prev) => ({
+          ...prev,
+          selectedStoreId: store.id,
+        }),
+      });
     },
   });
 
@@ -50,7 +92,12 @@ function StoresComponent() {
   };
 
   const handleSelectStore = (storeId: string) => {
-    setSelectedStoreId(storeId);
+    navigate({
+      search: (prev) => ({
+        ...prev,
+        selectedStoreId: storeId,
+      }),
+    });
   };
 
   const handleMoveUp = (categoryId: string, currentPosition: number) => {
@@ -78,7 +125,7 @@ function StoresComponent() {
   return (
     <div className="container mx-auto max-w-6xl p-4">
       <div className="mb-6 flex items-center gap-4">
-        <Link to="/">
+        <Link search={{ selectedStoreId: selectedStoreId ?? undefined }} to="/">
           <Button size="icon" variant="ghost">
             <IconArrowLeft />
           </Button>
@@ -98,7 +145,7 @@ function StoresComponent() {
           <h2 className="mb-4 font-semibold text-lg">Your Stores</h2>
           <StoreList
             onSelectStore={handleSelectStore}
-            selectedStoreId={selectedStoreId}
+            selectedStoreId={selectedStoreId ?? null}
             stores={stores ?? []}
           />
         </div>

@@ -25,7 +25,10 @@ export function StoreSelector({
         selectedStoreId={selectedStoreId}
         stores={stores}
       />
-      <Link to="/stores">
+      <Link
+        search={{ selectedStoreId: selectedStoreId ?? undefined }}
+        to="/stores"
+      >
         <Button size="icon" variant="ghost">
           <IconSettings />
         </Button>
