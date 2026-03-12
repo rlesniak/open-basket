@@ -86,6 +86,12 @@ export function ItemList({
     };
   }, [items, categories]);
 
+  const totalItems = items.length;
+  const purchasedCount = purchasedItems.length;
+  const progressValue =
+    totalItems > 0 ? Math.round((purchasedCount / totalItems) * 100) : 0;
+  const pendingCategoryCount = categoryOrder.size;
+
   const getCategoryLabel = (categoryId: string) => {
     if (categoryId === "uncategorized") {
       return "📦 Inne";
@@ -105,7 +111,53 @@ export function ItemList({
   };
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-5">
+      <section className="overflow-hidden rounded-[28px] border border-white/10 bg-[linear-gradient(180deg,rgba(28,28,31,0.96),rgba(18,18,20,0.98))] p-4 shadow-[0_20px_60px_rgba(0,0,0,0.28)]">
+        <div className="flex items-start justify-between gap-4">
+          <div className="space-y-1">
+            <p className="font-medium text-[11px] text-zinc-500 uppercase tracking-[0.24em]">
+              Trasa zakupowa
+            </p>
+            <h2 className="font-semibold text-[24px] text-zinc-50 leading-tight">
+              {purchasedCount} z {totalItems} produktów gotowe
+            </h2>
+            <p className="text-base text-zinc-400">
+              {pendingItems.length} aktywne • {pendingCategoryCount} działy
+            </p>
+          </div>
+
+          <div className="rounded-2xl border border-amber-400/20 bg-amber-300/12 px-4 py-3 text-right text-amber-200">
+            <p className="font-medium text-[11px] text-amber-100/80 uppercase tracking-[0.2em]">
+              Postęp
+            </p>
+            <p className="font-semibold text-3xl leading-none">
+              {progressValue}%
+            </p>
+          </div>
+        </div>
+
+        <div className="mt-5 h-3 overflow-hidden rounded-full bg-white/8">
+          <motion.div
+            animate={{ width: `${progressValue}%` }}
+            className="h-full rounded-full bg-[linear-gradient(90deg,#22c55e,#f59e0b)]"
+            initial={{ width: 0 }}
+            transition={{ duration: 0.35, ease: "easeOut" }}
+          />
+        </div>
+
+        <div className="mt-5 flex flex-wrap gap-2 text-xs">
+          <span className="rounded-full border border-white/8 bg-white/4 px-3 py-2 font-medium text-zinc-200">
+            🧺 Aktywne: {pendingItems.length}
+          </span>
+          <span className="rounded-full border border-white/8 bg-white/4 px-3 py-2 font-medium text-zinc-200">
+            ✅ Kupione: {purchasedCount}
+          </span>
+          <span className="rounded-full border border-white/8 bg-white/4 px-3 py-2 font-medium text-zinc-200">
+            🏬 Działy: {pendingCategoryCount}
+          </span>
+        </div>
+      </section>
+
       {/* Pending items grouped by category */}
       <AnimatePresence mode="popLayout">
         {Array.from(categoryOrder.entries()).map(([categoryId, catItems]) => {
@@ -115,53 +167,67 @@ export function ItemList({
           return (
             <motion.section
               animate={{ opacity: 1, y: 0 }}
-              className="overflow-hidden rounded-xl border bg-card shadow-sm"
+              className="relative overflow-hidden rounded-[22px] border border-white/8 bg-[linear-gradient(180deg,rgba(24,24,27,0.94),rgba(15,15,18,0.98))] shadow-[0_10px_24px_rgba(0,0,0,0.18)]"
               exit={{ opacity: 0, y: -20 }}
               initial={{ opacity: 0, y: 20 }}
               key={categoryId}
               layout
             >
               <div
-                className="flex items-center gap-2 border-b bg-linear-to-r px-4 py-2"
+                aria-hidden="true"
+                className="absolute top-0 bottom-0 left-0 w-1.5"
+                style={{ backgroundColor: categoryColor }}
+              />
+
+              <div
+                className="border-b px-4 py-3 backdrop-blur-sm"
                 style={{
-                  backgroundColor: `${categoryColor}15`,
-                  borderLeftWidth: "4px",
-                  borderLeftColor: categoryColor,
+                  backgroundColor: `${categoryColor}18`,
+                  borderBottomColor: `${categoryColor}24`,
                 }}
               >
-                <h3 className="font-semibold text-sm">
-                  {getCategoryLabel(categoryId)}
-                </h3>
-                <span className="font-medium text-muted-foreground text-xs">
-                  {catItems.length}
-                </span>
+                <div className="flex items-center justify-between gap-3">
+                  <div>
+                    <p className="font-semibold text-[18px] text-zinc-50 leading-none">
+                      {getCategoryLabel(categoryId)}
+                    </p>
+                  </div>
+                  <span className="shrink-0 rounded-full border border-white/10 bg-white/6 px-2.5 py-1 font-semibold text-xs text-zinc-100">
+                    {catItems.length}
+                  </span>
+                </div>
               </div>
 
               <motion.div
                 animate="visible"
-                className="flex flex-col gap-2 p-3"
+                className="px-2 py-2 pl-4 sm:px-3"
                 initial="hidden"
                 variants={containerVariants}
               >
-                <AnimatePresence mode="popLayout">
-                  {catItems.map((item) => (
-                    <motion.div
-                      animate="visible"
-                      exit="exit"
-                      initial="hidden"
-                      key={item.id}
-                      layout
-                      variants={itemVariants}
-                    >
-                      <ItemCard
-                        item={item}
-                        onDelete={onDelete}
-                        onEdit={onEdit}
-                        onToggleStatus={onToggleStatus}
-                      />
-                    </motion.div>
-                  ))}
-                </AnimatePresence>
+                <div className="overflow-hidden rounded-[18px] border border-white/8 bg-white/4">
+                  <AnimatePresence mode="popLayout">
+                    {catItems.map((item, index) => (
+                      <motion.div
+                        animate="visible"
+                        className={
+                          index > 0 ? "border-white/8 border-t" : undefined
+                        }
+                        exit="exit"
+                        initial="hidden"
+                        key={item.id}
+                        layout
+                        variants={itemVariants}
+                      >
+                        <ItemCard
+                          item={item}
+                          onDelete={onDelete}
+                          onEdit={onEdit}
+                          onToggleStatus={onToggleStatus}
+                        />
+                      </motion.div>
+                    ))}
+                  </AnimatePresence>
+                </div>
               </motion.div>
             </motion.section>
           );
@@ -172,44 +238,51 @@ export function ItemList({
       {purchasedItems.length > 0 && (
         <motion.section
           animate={{ opacity: 1 }}
-          className="overflow-hidden rounded-xl border bg-muted/30 shadow-sm"
+          className="overflow-hidden rounded-[22px] border border-white/8 bg-[linear-gradient(180deg,rgba(20,24,22,0.94),rgba(14,18,16,0.98))] shadow-[0_10px_24px_rgba(0,0,0,0.18)]"
           initial={{ opacity: 0 }}
           layout
         >
-          <div className="flex items-center gap-2 border-b bg-muted/50 px-4 py-2">
-            <h3 className="font-semibold text-muted-foreground text-sm">
-              ✅ Kupione
-            </h3>
-            <span className="font-medium text-muted-foreground text-xs">
+          <div className="flex items-center justify-between gap-3 border-white/8 border-b bg-white/3 px-4 py-3">
+            <div>
+              <h3 className="font-semibold text-[18px] text-zinc-50">
+                ✅ Gotowe
+              </h3>
+            </div>
+            <span className="shrink-0 rounded-full border border-emerald-400/20 bg-emerald-400/10 px-2.5 py-1 font-semibold text-emerald-200 text-xs">
               {purchasedItems.length}
             </span>
           </div>
 
           <motion.div
             animate="visible"
-            className="flex flex-col gap-2 p-3"
+            className="px-2 py-2 sm:px-3"
             initial="hidden"
             variants={containerVariants}
           >
-            <AnimatePresence mode="popLayout">
-              {purchasedItems.map((item) => (
-                <motion.div
-                  animate="visible"
-                  exit="exit"
-                  initial="hidden"
-                  key={item.id}
-                  layout
-                  variants={itemVariants}
-                >
-                  <ItemCard
-                    item={item}
-                    onDelete={onDelete}
-                    onEdit={onEdit}
-                    onToggleStatus={onToggleStatus}
-                  />
-                </motion.div>
-              ))}
-            </AnimatePresence>
+            <div className="overflow-hidden rounded-[18px] border border-white/8 bg-white/4">
+              <AnimatePresence mode="popLayout">
+                {purchasedItems.map((item, index) => (
+                  <motion.div
+                    animate="visible"
+                    className={
+                      index > 0 ? "border-white/8 border-t" : undefined
+                    }
+                    exit="exit"
+                    initial="hidden"
+                    key={item.id}
+                    layout
+                    variants={itemVariants}
+                  >
+                    <ItemCard
+                      item={item}
+                      onDelete={onDelete}
+                      onEdit={onEdit}
+                      onToggleStatus={onToggleStatus}
+                    />
+                  </motion.div>
+                ))}
+              </AnimatePresence>
+            </div>
           </motion.div>
         </motion.section>
       )}
@@ -218,14 +291,16 @@ export function ItemList({
       {pendingItems.length === 0 && purchasedItems.length === 0 && (
         <motion.div
           animate={{ opacity: 1, y: 0 }}
-          className="flex flex-col items-center justify-center rounded-xl border border-dashed bg-muted/20 p-12 text-center"
+          className="flex flex-col items-center justify-center rounded-[28px] border border-white/10 border-dashed bg-[linear-gradient(180deg,rgba(22,22,26,0.96),rgba(12,12,15,0.98))] p-12 text-center"
           initial={{ opacity: 0, y: 20 }}
         >
-          <div className="mb-2 rounded-full bg-muted p-3">
-            <span className="text-2xl">🛒</span>
+          <div className="mb-3 rounded-full bg-white/6 p-4 shadow-inner">
+            <span className="text-3xl">🛒</span>
           </div>
-          <p className="font-medium text-sm">Brak produktów na liście</p>
-          <p className="mt-1 text-muted-foreground text-xs">
+          <p className="font-semibold text-base text-zinc-50">
+            Brak produktów na liście
+          </p>
+          <p className="mt-2 max-w-60 text-sm text-zinc-400">
             Dodaj produkty używając pola powyżej
           </p>
         </motion.div>

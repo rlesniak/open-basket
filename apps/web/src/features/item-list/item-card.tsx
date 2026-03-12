@@ -23,6 +23,8 @@ export function ItemCard({
   onDelete,
 }: ItemCardProps) {
   const isPurchased = item.status === "purchased";
+  const quantityLabel = item.quantity?.trim();
+  const noteLabel = item.note?.trim();
 
   const handleToggle = () => {
     onToggleStatus(item.id, isPurchased ? "pending" : "purchased");
@@ -31,71 +33,68 @@ export function ItemCard({
   return (
     <div
       className={cn(
-        "group flex w-full items-center justify-between gap-3 rounded-xl border bg-background px-4 py-3 shadow-sm transition-all hover:border-primary/50",
-        isPurchased && "opacity-50 grayscale"
+        "group flex min-h-16 w-full items-center gap-3 px-3 py-3 transition-colors",
+        isPurchased && "opacity-60"
       )}
     >
-      <div className="flex items-center">
+      <div className="flex shrink-0 items-center">
         <Checkbox
           checked={isPurchased}
-          className="h-5 w-5 rounded-full"
+          className="h-6 w-6 rounded-full border-2 border-white/30"
           onCheckedChange={handleToggle}
         />
       </div>
 
       <button
-        className="flex min-w-0 flex-1 flex-col items-start gap-1 text-left outline-none"
+        className="flex min-h-10 min-w-0 flex-1 flex-col justify-center gap-1 text-left outline-none"
         onClick={handleToggle}
         type="button"
       >
-        <span
-          className={cn(
-            "truncate font-medium text-base transition-all",
-            isPurchased && "text-muted-foreground line-through"
+        <div className="flex w-full items-start justify-between gap-3">
+          <div className="min-w-0">
+            <span
+              className={cn(
+                "block truncate font-semibold text-[15px] text-zinc-50 leading-snug transition-all",
+                isPurchased && "text-zinc-500 line-through"
+              )}
+            >
+              {item.name}
+            </span>
+            {noteLabel && (
+              <span className="mt-0.5 block truncate text-[12px] text-zinc-400">
+                📝 {noteLabel}
+              </span>
+            )}
+          </div>
+
+          {quantityLabel && (
+            <span className="shrink-0 rounded-full border border-amber-300/18 bg-amber-300/12 px-2.5 py-1 font-semibold text-[12px] text-amber-100">
+              📦 {quantityLabel}
+            </span>
           )}
-        >
-          {item.name}
-        </span>
-        {(item.quantity || item.note) && (
-          <span className="flex items-center gap-1.5 font-medium text-muted-foreground text-xs">
-            {item.quantity && (
-              <span
-                className="shrink-0 rounded-md bg-muted px-1.5 py-0.5"
-                title="Ilość"
-              >
-                📦 {item.quantity}
-              </span>
-            )}
-            {item.note && (
-              <span
-                className="max-w-30 shrink-0 truncate rounded-md bg-muted px-1.5 py-0.5"
-                title="Notatka"
-              >
-                📝 {item.note}
-              </span>
-            )}
-          </span>
-        )}
+        </div>
       </button>
 
-      <DropdownMenu>
-        <DropdownMenuTrigger className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full text-muted-foreground transition-colors hover:bg-muted hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring">
-          <IconDotsVertical className="h-5 w-5" />
-        </DropdownMenuTrigger>
-        <DropdownMenuContent align="end" className="w-36">
-          <DropdownMenuItem onClick={() => onEdit(item)}>
-            <IconEdit className="mr-2 h-4 w-4" />
-            Edytuj
-          </DropdownMenuItem>
-          <DropdownMenuItem
-            onClick={() => onDelete(item.id)}
-            variant="destructive"
-          >
-            <IconTrash className="mr-2 h-4 w-4" />
-            Usuń
-          </DropdownMenuItem>
-        </DropdownMenuContent>
-      </DropdownMenu>
+      <div className="flex shrink-0 items-center">
+        <DropdownMenu>
+          <DropdownMenuTrigger className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full text-zinc-400 transition-colors hover:bg-white/8 hover:text-zinc-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring">
+            <IconDotsVertical className="h-4.5 w-4.5" />
+          </DropdownMenuTrigger>
+          <DropdownMenuContent align="end" className="w-36">
+            <DropdownMenuItem onClick={() => onEdit(item)}>
+              <IconEdit className="mr-2 h-4 w-4" />
+              Edytuj
+            </DropdownMenuItem>
+            <DropdownMenuItem
+              onClick={() => onDelete(item.id)}
+              variant="destructive"
+            >
+              <IconTrash className="mr-2 h-4 w-4" />
+              Usuń
+            </DropdownMenuItem>
+          </DropdownMenuContent>
+        </DropdownMenu>
+      </div>
     </div>
   );
 }
