@@ -3,11 +3,46 @@ import { env } from "@open-basket/env/server";
 import { eq } from "drizzle-orm";
 import { drizzle } from "drizzle-orm/libsql";
 
-export * from "./schema/index.js";
+export {
+  type Category,
+  categories,
+  defaultCategories,
+  type NewCategory,
+} from "./schema/categories.js";
+export {
+  type CategoryMapping,
+  categoryMappings,
+  type NewCategoryMapping,
+} from "./schema/category-mappings.js";
+export {
+  type ItemStatus,
+  itemStatusEnum,
+  type NewShoppingItem,
+  type ShoppingItem,
+  shoppingItems,
+} from "./schema/shopping-items.js";
+export {
+  type NewStoreCategory,
+  type StoreCategory,
+  storeCategories,
+} from "./schema/store-categories.js";
+export { type NewStore, type Store, stores } from "./schema/stores.js";
 
 import { categories, defaultCategories } from "./schema/categories.js";
 import { storeCategories } from "./schema/store-categories.js";
 import { stores } from "./schema/stores.js";
+
+const legacyCategoryIcons = new Set([
+  "apple",
+  "milk",
+  "meat",
+  "bread",
+  "package",
+  "snowflake",
+  "bottle",
+  "sparkles",
+  "box",
+]);
 
 const client = createClient({
   url: env.DATABASE_URL,
@@ -22,6 +57,27 @@ export async function seedDatabase() {
   if (existingCategories.length === 0) {
     // Insert default categories
     await db.insert(categories).values(defaultCategories);
+  } else {
+    for (const defaultCategory of defaultCategories) {
+      const existingCategory = existingCategories.find(
+        (category) => category.name === defaultCategory.name
+      );
+
+      if (!existingCategory) {
+        await db.insert(categories).values(defaultCategory);
+        continue;
+      }
+
+      if (
+        existingCategory.icon == null ||
+        legacyCategoryIcons.has(existingCategory.icon)
+      ) {
+        await db
+          .update(categories)
+          .set({ icon: defaultCategory.icon })
+          .where(eq(categories.id, existingCategory.id));
+      }
+    }
   }
 
   // Check if default store exists

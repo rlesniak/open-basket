@@ -4,7 +4,6 @@ import { AnimatePresence, motion } from "framer-motion";
 import { useMemo } from "react";
 import type { CategoryWithPosition } from "@/entities/category/model";
 import type { ShoppingItemWithCategory } from "@/entities/shopping-item/model";
-import { ItemActions } from "./item-actions";
 import { ItemCard } from "./item-card";
 
 interface ItemListProps {
@@ -87,12 +86,17 @@ export function ItemList({
     };
   }, [items, categories]);
 
-  const getCategoryName = (categoryId: string) => {
+  const getCategoryLabel = (categoryId: string) => {
     if (categoryId === "uncategorized") {
-      return "Inne";
+      return "📦 Inne";
     }
+
     const category = categories.find((c) => c.id === categoryId);
-    return category?.name ?? "Inne";
+    if (!category) {
+      return "📦 Inne";
+    }
+
+    return category.icon ? `${category.icon} ${category.name}` : category.name;
   };
 
   const getCategoryColor = (categoryId: string) => {
@@ -104,82 +108,86 @@ export function ItemList({
     <div className="space-y-6">
       {/* Pending items grouped by category */}
       <AnimatePresence mode="popLayout">
-        {Array.from(categoryOrder.entries()).map(([categoryId, catItems]) => (
-          <motion.section
-            animate={{ opacity: 1, y: 0 }}
-            className="rounded-none border"
-            exit={{ opacity: 0, y: -20 }}
-            initial={{ opacity: 0, y: 20 }}
-            key={categoryId}
-            layout
-          >
-            <div
-              className="flex items-center gap-2 border-b bg-muted/50 px-3 py-2"
-              style={{
-                borderLeftWidth: "4px",
-                borderLeftColor: getCategoryColor(categoryId) ?? "transparent",
-              }}
-            >
-              <h3 className="font-medium text-sm">
-                {getCategoryName(categoryId)}
-              </h3>
-              <span className="text-muted-foreground text-xs">
-                ({catItems.length})
-              </span>
-            </div>
+        {Array.from(categoryOrder.entries()).map(([categoryId, catItems]) => {
+          const categoryColor =
+            getCategoryColor(categoryId) ?? "hsl(var(--muted))";
 
-            <motion.div
-              animate="visible"
-              initial="hidden"
-              variants={containerVariants}
+          return (
+            <motion.section
+              animate={{ opacity: 1, y: 0 }}
+              className="overflow-hidden rounded-xl border bg-card shadow-sm"
+              exit={{ opacity: 0, y: -20 }}
+              initial={{ opacity: 0, y: 20 }}
+              key={categoryId}
+              layout
             >
-              <AnimatePresence mode="popLayout">
-                {catItems.map((item) => (
-                  <motion.div
-                    animate="visible"
-                    className="group flex items-center"
-                    exit="exit"
-                    initial="hidden"
-                    key={item.id}
-                    layout
-                    variants={itemVariants}
-                  >
-                    <div className="flex-1">
-                      <ItemCard item={item} onToggleStatus={onToggleStatus} />
-                    </div>
-                    <div className="opacity-0 transition-opacity group-hover:opacity-100">
-                      <ItemActions
-                        onDelete={() => onDelete(item.id)}
-                        onEdit={() => onEdit(item)}
+              <div
+                className="flex items-center gap-2 border-b bg-linear-to-r px-4 py-2"
+                style={{
+                  backgroundColor: `${categoryColor}15`,
+                  borderLeftWidth: "4px",
+                  borderLeftColor: categoryColor,
+                }}
+              >
+                <h3 className="font-semibold text-sm">
+                  {getCategoryLabel(categoryId)}
+                </h3>
+                <span className="font-medium text-muted-foreground text-xs">
+                  {catItems.length}
+                </span>
+              </div>
+
+              <motion.div
+                animate="visible"
+                className="flex flex-col gap-2 p-3"
+                initial="hidden"
+                variants={containerVariants}
+              >
+                <AnimatePresence mode="popLayout">
+                  {catItems.map((item) => (
+                    <motion.div
+                      animate="visible"
+                      exit="exit"
+                      initial="hidden"
+                      key={item.id}
+                      layout
+                      variants={itemVariants}
+                    >
+                      <ItemCard
+                        item={item}
+                        onDelete={onDelete}
+                        onEdit={onEdit}
+                        onToggleStatus={onToggleStatus}
                       />
-                    </div>
-                  </motion.div>
-                ))}
-              </AnimatePresence>
-            </motion.div>
-          </motion.section>
-        ))}
+                    </motion.div>
+                  ))}
+                </AnimatePresence>
+              </motion.div>
+            </motion.section>
+          );
+        })}
       </AnimatePresence>
 
       {/* Purchased items section */}
       {purchasedItems.length > 0 && (
         <motion.section
           animate={{ opacity: 1 }}
-          className="rounded-none border"
+          className="overflow-hidden rounded-xl border bg-muted/30 shadow-sm"
           initial={{ opacity: 0 }}
           layout
         >
-          <div className="flex items-center gap-2 border-b bg-muted/50 px-3 py-2">
-            <h3 className="font-medium text-muted-foreground text-sm">
-              Kupione
+          <div className="flex items-center gap-2 border-b bg-muted/50 px-4 py-2">
+            <h3 className="font-semibold text-muted-foreground text-sm">
+              ✅ Kupione
             </h3>
-            <span className="text-muted-foreground text-xs">
-              ({purchasedItems.length})
+            <span className="font-medium text-muted-foreground text-xs">
+              {purchasedItems.length}
             </span>
           </div>
 
           <motion.div
             animate="visible"
+            className="flex flex-col gap-2 p-3"
             initial="hidden"
             variants={containerVariants}
           >
@@ -187,22 +195,18 @@ export function ItemList({
               {purchasedItems.map((item) => (
                 <motion.div
                   animate="visible"
-                  className="group flex items-center"
                   exit="exit"
                   initial="hidden"
                   key={item.id}
                   layout
                   variants={itemVariants}
                 >
-                  <div className="flex-1">
-                    <ItemCard item={item} onToggleStatus={onToggleStatus} />
-                  </div>
-                  <div className="opacity-0 transition-opacity group-hover:opacity-100">
-                    <ItemActions
-                      onDelete={() => onDelete(item.id)}
-                      onEdit={() => onEdit(item)}
-                    />
-                  </div>
+                  <ItemCard
+                    item={item}
+                    onDelete={onDelete}
+                    onEdit={onEdit}
+                    onToggleStatus={onToggleStatus}
+                  />
                 </motion.div>
               ))}
             </AnimatePresence>
@@ -214,13 +218,14 @@ export function ItemList({
       {pendingItems.length === 0 && purchasedItems.length === 0 && (
         <motion.div
           animate={{ opacity: 1, y: 0 }}
-          className="flex flex-col items-center justify-center rounded-none border border-dashed p-8 text-center"
+          className="flex flex-col items-center justify-center rounded-xl border border-dashed bg-muted/20 p-12 text-center"
           initial={{ opacity: 0, y: 20 }}
         >
-          <p className="text-muted-foreground text-sm">
-            Brak produktów na liście
-          </p>
-          <p className="text-muted-foreground text-xs">
+          <div className="mb-2 rounded-full bg-muted p-3">
+            <span className="text-2xl">🛒</span>
+          </div>
+          <p className="font-medium text-sm">Brak produktów na liście</p>
+          <p className="mt-1 text-muted-foreground text-xs">
             Dodaj produkty używając pola powyżej
           </p>
         </motion.div>
