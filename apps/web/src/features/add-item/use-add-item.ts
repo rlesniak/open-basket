@@ -1,4 +1,8 @@
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import {
+  useMutation,
+  useQueryClient,
+  useSuspenseQuery,
+} from "@tanstack/react-query";
 import { useState } from "react";
 import { categoriesQueryOptions } from "@/entities/category/queries";
 import {
@@ -12,7 +16,7 @@ export function useAddItem() {
   const [isProcessing, setIsProcessing] = useState(false);
   const queryClient = useQueryClient();
 
-  const { data: categories } = useQuery(categoriesQueryOptions());
+  const { data: categories } = useSuspenseQuery(categoriesQueryOptions());
 
   const addItemMutation = useMutation({
     mutationFn: createShoppingItem,

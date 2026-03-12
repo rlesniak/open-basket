@@ -1,7 +1,7 @@
 import { useSuspenseQuery } from "@tanstack/react-query";
 import { createFileRoute, redirect, useNavigate } from "@tanstack/react-router";
 import { z } from "zod";
-
+import { categoriesQueryOptions } from "@/entities/category/queries";
 import type { ShoppingItemWithCategory } from "@/entities/shopping-item/model";
 import {
   shoppingItemsQueryOptions,
@@ -28,6 +28,7 @@ export const Route = createFileRoute("/")({
       storesQueryOptions()
     );
     await context.queryClient.ensureQueryData(shoppingItemsQueryOptions());
+    await context.queryClient.ensureQueryData(categoriesQueryOptions());
 
     const activeStoreId =
       stores.find((store) => store.id === search.selectedStoreId)?.id ??
