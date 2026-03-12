@@ -2,7 +2,7 @@
 node_modules
 .pnp
 .pnp.js
-local.db
+*.db
 
 # Build outputs
 dist
